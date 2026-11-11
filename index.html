@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Created by Csar Ramirez -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dólar Venezuela - Monitor & Calculadora</title>
+  
+  <!-- Manifest & Meta tags para PWA / Web2Apk -->
+  <meta name="theme-color" content="#131B2E">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DolarUSDT">
+  
+  <!-- Google Fonts & Tailwind CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#ECFDF5',
+              100: '#D1FAE5',
+              400: '#34D399',
+              500: '#10B981',
+              600: '#059669',
+              900: '#064E3B',
+            },
+            binance: '#F0B90B',
+            surface: {
+              card: '#1E293B',
+              bg: '#0F172A',
+              border: '#334155',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Estilos personalizados para sensación de aplicación móvil nativa */
+    body {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    input {
+      user-select: auto;
+    }
+    /* Ocultar flechas numéricas */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+    /* Animación de pulso suave */
+    @keyframes subtlePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(0.98); }
+    }
+    .badge-live {
+      animation: subtlePulse 2.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex items-center justify-center p-0 sm:p-4 antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Marco Móvil / Shell del Smartphone -->
+  <div class="w-full max-w-md bg-slate-900 sm:rounded-[36px] min-h-screen sm:min-h-[860px] flex flex-col shadow-2xl border border-slate-800 relative overflow-hidden">
+    
+    <!-- Barra Superior de Notificaciones / Header App -->
+    <header class="pt-4 pb-3 px-6 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-30">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-amber-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-bold text-base tracking-tight leading-tight flex items-center gap-1.5">
+              Dólar & USDT Vzla
+              <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 badge-live"></span>
+            </h1>
+            <p class="text-[11px] text-slate-400">Tasas Oficial BCV & Binance P2P</p>
+          </div>
+        </div>
+
+        <!-- Botones de Acción Rápida: Refrescar y Guía APK -->
+        <div class="flex items-center gap-1.5">
+          <button id="btn-refresh" onclick="fetchRates()" title="Actualizar tasas" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all active:scale-90">
+            <svg id="icon-refresh" class="w-5 h-5 transition-transform duration-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+          <button onclick="toggleModal('modal-apk', true)" title="Convertir a APK / Instalar" class="p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-all active:scale-90 border border-emerald-500/20 flex items-center gap-1 text-xs font-semibold px-2.5">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993 0 .5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.412 13.8533 8.125 12 8.125c-1.8533 0-3.5902.287-5.1368.8247L4.8409 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.152 5676l1.9972 3.4592C2.6889 11.1867.3333 14.6565.3333 18.736h23.3334c0-4.0795-2.3556-7.5493-5.7874-9.4146"/>
+            </svg>
+            <span>APK</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de estado / última actualización -->
+      <div class="mt-2.5 flex items-center justify-between text-[11px] text-slate-400">
+        <span id="status-time" class="truncate">Sincronizando BCV y Binance P2P...</span>
+        <button onclick="toggleModal('modal-custom', true)" class="text-amber-400 hover:underline flex items-center gap-1 font-medium">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          Tasa manual
+        </button>
+      </div>
+    </header>
+
+    <!-- Contenido Scrollable -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+
+      <!-- Notificación de error o conexión offline -->
+      <div id="offline-alert" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-amber-300 text-xs flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-amber-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span>Usando tasa guardada en caché local.</span>
+        </div>
+        <button onclick="fetchRates()" class="underline font-semibold hover:text-amber-200">Reintentar</button>
+      </div>
+
+      <!-- Tarjetas de Tasa (Selector BCV vs USDT Binance) -->
+      <div class="grid grid-cols-2 gap-3">
+        
+        <!-- Tarjeta Oficial BCV -->
+        <div id="card-bcv" onclick="selectRateType('bcv')" class="cursor-pointer relative p-3.5 rounded-2xl border-2 transition-all duration-200 bg-slate-800/80 border-emerald-500/80 shadow-lg shadow-emerald-500/10">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Oficial BCV</span>
+            <span id="badge-check-bcv" class="w-4 h-4 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-[10px]">✓</span>
+          </div>
+          <div class="text-xs text-slate-400">1 USD =</div>
+          <div class="text-xl font-bold font-mono tracking-tight text-white mt-0.5">
+            <span id="rate-bcv-display">--.--</span> <span class="text-xs font-normal text-slate-400">Bs</span>
+          </div>
+          <div id="time-bcv" class="text-[10px] text-slate-400 mt-1 truncate">Cargando BCV...</div>
+        </div>
+
+        <!-- Tarjeta USDT Binance -->
+        <div id="card-usdt" onclick="selectRateType('usdt')" class="cursor-pointer relative p-3.5 rounded-2xl border-2 transition-all duration-200 bg-slate-800/40 border-slate-700/60 hover:border-slate-600">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[11px] font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-amber-400 inline" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16.624 13.9202l2.715-2.715-2.735-2.735-2.71 2.715 2.73 2.735zm-9.248 0l2.715-2.715-2.715-2.715-2.715 2.715 2.715 2.715zm4.624-4.625l2.715-2.715-2.715-2.715-2.715 2.715 2.715 2.715zm0 9.249l2.715-2.715-2.715-2.715-2.715 2.715 2.715 2.715z"/>
+              </svg>
+              USDT Binance
+            </span>
+            <span id="badge-check-usdt" class="w-4 h-4 rounded-full bg-amber-400 text-slate-950 hidden items-center justify-center font-bold text-[10px]">✓</span>
+          </div>
+          <div class="text-xs text-slate-400">1 USDT =</div>
+          <div class="text-xl font-bold font-mono tracking-tight text-white mt-0.5">
+            <span id="rate-usdt-display">--.--</span> <span class="text-xs font-normal text-slate-400">Bs</span>
+          </div>
+          <div id="time-usdt" class="text-[10px] text-amber-400/80 mt-1 truncate">Promedio P2P</div>
+        </div>
+
+      </div>
+
+      <!-- Tarjeta Principal de la Calculadora -->
+      <section class="bg-slate-800/60 rounded-3xl p-5 border border-slate-700/60 backdrop-blur-sm shadow-xl space-y-4">
+        
+        <div class="flex items-center justify-between text-xs text-slate-300">
+          <span class="font-medium text-slate-400 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            Conversor Bidireccional
+          </span>
+          <span id="active-rate-badge" class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            Tasa: BCV
+          </span>
+        </div>
+
+        <!-- Inputs de Conversión -->
+        <div class="space-y-3 relative" id="converter-container">
+
+          <!-- Campo Dólares / USDT -->
+          <div id="box-usd" class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-700/80 focus-within:border-emerald-500 transition-colors">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+              <label for="input-usd" id="label-usd" class="font-medium">Dólares Estadounidenses (USD)</label>
+              <span id="currency-badge-usd" class="font-mono text-emerald-400 font-bold">USD $</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="symbol-usd" class="text-xl font-bold text-slate-400">$</span>
+              <input 
+                id="input-usd" 
+                type="number" 
+                step="any" 
+                inputmode="decimal" 
+                placeholder="0.00" 
+                class="w-full bg-transparent text-2xl font-bold font-mono text-white outline-none placeholder:text-slate-600"
+                oninput="handleUsdChange(this.value)"
+              >
+              <button onclick="clearInputs()" title="Borrar" class="text-slate-500 hover:text-slate-300 p-1">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div id="formatted-usd" class="text-[11px] text-slate-500 font-mono mt-1">$ 0.00</div>
+          </div>
+
+          <!-- Botón Switch Central -->
+          <div class="flex justify-center -my-2 relative z-10">
+            <button 
+              onclick="swapInputs()" 
+              title="Invertir campos"
+              class="w-10 h-10 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center justify-center shadow-md shadow-emerald-500/20 active:rotate-180 transition-transform duration-300"
+            >
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Campo Bolívares (Bs. VES) -->
+          <div id="box-ves" class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-700/80 focus-within:border-emerald-500 transition-colors">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+              <label for="input-ves" class="font-medium">Bolívares Digitales</label>
+              <span class="font-mono text-emerald-400 font-bold">VES Bs.</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl font-bold text-slate-400">Bs.</span>
+              <input 
+                id="input-ves" 
+                type="number" 
+                step="any" 
+                inputmode="decimal" 
+                placeholder="0.00" 
+                class="w-full bg-transparent text-2xl font-bold font-mono text-white outline-none placeholder:text-slate-600"
+                oninput="handleVesChange(this.value)"
+              >
+              <button onclick="copyToClipboard('input-ves')" title="Copiar monto en Bs" class="text-slate-400 hover:text-emerald-400 p-1 active:scale-90">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+              </button>
+            </div>
+            <div id="formatted-ves" class="text-[11px] text-slate-500 font-mono mt-1">Bs. 0,00</div>
+          </div>
+
+        </div>
+
+        <!-- Montos Rápidos en USD / USDT -->
+        <div>
+          <div class="text-[11px] font-medium text-slate-400 mb-2">Montos frecuentes:</div>
+          <div class="grid grid-cols-6 gap-1.5">
+            <button onclick="setFastUsd(1)" class="py-1.5 rounded-xl bg-slate-700/60 hover:bg-emerald-600 hover:text-white font-mono text-xs font-semibold text-slate-200 transition-colors">$1</button>
+            <button onclick="setFastUsd(5)" class="py-1.5 rounded-xl bg-slate-700/60 hover:bg-emerald-600 hover:text-white font-mono text-xs font-semibold text-slate-200 transition-colors">$5</button>
+            <button onclick="setFastUsd(10)" class="py-1.5 rounded-xl bg-slate-700/60 hover:bg-emerald-600 hover:text-white font-mono text-xs font-semibold text-slate-200 transition-colors">$10</button>
+            <button onclick="setFastUsd(20)" class="py-1.5 rounded-xl bg-slate-700/60 hover:bg-emerald-600 hover:text-white font-mono text-xs font-semibold text-slate-200 transition-colors">$20</button>
+            <button onclick="setFastUsd(50)" class="py-1.5 rounded-xl bg-slate-700/60 hover:bg-emerald-600 hover:text-white font-mono text-xs font-semibold text-slate-200 transition-colors">$50</button>
+            <button onclick="setFastUsd(100)" class="py-1.5 rounded-xl bg-slate-700/60 hover:bg-emerald-600 hover:text-white font-mono text-xs font-semibold text-slate-200 transition-colors">$100</button>
+          </div>
+        </div>
+
+        <!-- Comparativa directa de brecha -->
+        <div class="pt-2 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-400">
+          <span>Diferencia BCV vs USDT Binance:</span>
+          <span id="rate-gap" class="font-mono font-semibold text-slate-200">--%</span>
+        </div>
+
+      </section>
+
+      <!-- Botón Informativo: Guía para Instalar como APK -->
+      <div onclick="toggleModal('modal-apk', true)" class="cursor-pointer bg-gradient-to-r from-emerald-900/40 via-teal-900/30 to-slate-800 rounded-2xl p-3.5 border border-emerald-500/30 flex items-center gap-3 hover:border-emerald-500/60 transition-all shadow-md">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm0-4.5a1 1 0 01-2 0V7a1 1 0 012 0v5z"/>
+          </svg>
+        </div>
+        <div class="flex-1 text-left">
+          <h4 class="text-xs font-bold text-white flex items-center gap-1.5">
+            ¿Cómo tener el archivo .APK en tu teléfono?
+            <span class="text-[10px] bg-emerald-500/30 text-emerald-300 px-1.5 py-0.2 rounded">Gratis</span>
+          </h4>
+          <p class="text-[11px] text-slate-300">Descárgala como PWA nativa o conviértela a APK en 1 clic.</p>
+        </div>
+        <svg class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </div>
+
+    </main>
+
+    <!-- Footer móvil / Barra inferior -->
+    <footer class="p-3 bg-slate-900/90 border-t border-slate-800 text-center text-[11px] text-slate-500 space-y-1">
+      <div>
+        Fuentes: <span class="text-emerald-400">BCV (DolarApi)</span> & <span class="text-amber-400">Binance P2P USDT</span> · Hecho para uso diario
+      </div>
+      <div class="text-[10px] text-slate-400 font-medium">
+        Created by Csar Ramirez
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ================= MODAL: GENERADOR / GUÍA APK ================= -->
+  <div id="modal-apk" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993 0 .5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.412 13.8533 8.125 12 8.125c-1.8533 0-3.5902.287-5.1368.8247L4.8409 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.152 5676l1.9972 3.4592C2.6889 11.1867.3333 14.6565.3333 18.736h23.3334c0-4.0795-2.3556-7.5493-5.7874-9.4146"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-bold text-white">¿Cómo instalar como App / APK?</h3>
+        </div>
+        <button onclick="toggleModal('modal-apk', false)" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300">
+        
+        <div class="bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700/70">
+          <h4 class="font-bold text-emerald-400 text-sm mb-1">Método 1: Instalar directo (Sin compilar)</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Esta app ya cuenta con arquitectura PWA. Si la abres desde Chrome en Android:
+          </p>
+          <ol class="list-decimal list-inside mt-2 space-y-1 text-slate-300 font-medium">
+            <li>Toca los tres puntos de Chrome (<span class="font-bold">⋮</span>).</li>
+            <li>Selecciona <span class="text-emerald-300 font-semibold">"Agregar a la pantalla principal"</span> o <span class="text-emerald-300 font-semibold">"Instalar aplicación"</span>.</li>
+            <li>Se creará el ícono en tu móvil y funcionará como una app nativa sin barra de navegador.</li>
+          </ol>
+        </div>
+
+        <div class="bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700/70">
+          <h4 class="font-bold text-teal-400 text-sm mb-1">Método 2: Generar archivo binario .APK</h4>
+          <p class="text-slate-400 leading-relaxed mb-2">
+            Para compilar este código en un instalador <code class="bg-slate-900 px-1 py-0.5 rounded text-emerald-400">.apk</code> listo para compartir por WhatsApp o Drive:
+          </p>
+          <div class="space-y-2">
+            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-700">
+              <span class="font-semibold text-white block mb-0.5">Opción A: Web2Apk / Website2APK</span>
+              <span class="text-slate-400">Descarga este archivo HTML, súbelo a herramientas online como <strong class="text-emerald-300">gonative.io</strong> o <strong class="text-emerald-300">appsgeyser.com</strong> y descarga el archivo .apk directo.</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-700">
+              <span class="font-semibold text-white block mb-0.5">Opción B: Capacitor / Cordova</span>
+              <span class="text-slate-400">Empaqueta este <code class="text-slate-300">index.html</code> con <code class="text-slate-300">npx cap add android</code> y genera el APK en Android Studio en 2 minutos.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <button onclick="toggleModal('modal-apk', false)" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-colors">
+        Entendido
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL: TASA MANUAL PERSONALIZADA ================= -->
+  <div id="modal-custom" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 space-y-4">
+      
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-white">Fijar Tasa Manual</h3>
+        <button onclick="toggleModal('modal-custom', false)" class="text-slate-400 hover:text-white p-1">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-400">
+        ¿Tienes una tasa acordada o no hay internet? Ingresa aquí tu valor en Bolívares por cada USD o USDT:
+      </p>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Precio en Bolívares (Bs.):</label>
+        <div class="flex items-center bg-slate-800 rounded-xl px-3 py-2 border border-slate-700 focus-within:border-emerald-500">
+          <span class="text-slate-400 font-mono mr-2">Bs.</span>
+          <input id="input-custom-rate" type="number" step="0.01" placeholder="Ej: 1077.50" class="w-full bg-transparent text-white font-mono font-bold outline-none">
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="applyCustomRate()" class="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-colors">
+          Usar esta tasa
+        </button>
+        <button onclick="resetToApiRates()" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-colors">
+          Restablecer
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Notificación Toast Copiado -->
+  <div id="toast" class="fixed bottom-6 bg-emerald-500 text-slate-950 px-4 py-2 rounded-full font-bold text-xs shadow-xl transition-all duration-300 opacity-0 pointer-events-none transform translate-y-3 z-50">
+    ¡Copiado al portapapeles!
+  </div>
+
+  <!-- LÓGICA DE APLICACIÓN -->
+  <script>
+    // Variables de Estado de la Aplicación
+    const state = {
+      rates: {
+        bcv: { valor: 899.27, fechaActualizacion: 'Oficial' },
+        usdt: { valor: 1077.50, fechaActualizacion: 'Binance P2P' },
+        personalizada: null
+      },
+      activeType: 'bcv', // 'bcv', 'usdt', 'custom'
+      isSwapped: false,
+      lastEdited: 'usd' // 'usd' o 'ves'
+    };
+
+    // Función de inicialización
+    window.onload = function() {
+      // Cargar posibles datos guardados en caché local (LocalStorage)
+      loadCachedRates();
+      // Consultar APIs en vivo
+      fetchRates();
+      // Inicializar cálculo en $1 USD/USDT
+      setFastUsd(1);
+    };
+
+    // 1. Conexión con APIs: BCV (DolarApi) y Promedio USDT Binance P2P
+    async function fetchRates() {
+      const iconRefresh = document.getElementById('icon-refresh');
+      const statusTime = document.getElementById('status-time');
+      const offlineAlert = document.getElementById('offline-alert');
+      
+      iconRefresh.classList.add('animate-spin');
+      statusTime.innerText = 'Sincronizando BCV y Binance P2P...';
+
+      let bcvUpdated = false;
+      let usdtUpdated = false;
+
+      // Consulta de Tasa BCV Oficial
+      try {
+        const bcvRes = await fetch('https://ve.dolarapi.com/v1/dolares/oficial', { cache: 'no-store' });
+        if (bcvRes.ok) {
+          const bcvData = await bcvRes.json();
+          if (bcvData && bcvData.promedio) {
+            state.rates.bcv = {
+              valor: Number(bcvData.promedio),
+              fechaActualizacion: formatApiDate(bcvData.fechaActualizacion)
+            };
+            bcvUpdated = true;
+          }
+        }
+      } catch (err) {
+        console.warn('Error al consultar BCV:', err);
+      }
+
+      // Consulta de Tasa Promedio USDT Binance (Intenta fuentes directas P2P con fallback de mercado)
+      try {
+        const usdtRes = await fetch('https://ve.dolarapi.com/v1/dolares', { cache: 'no-store' });
+        if (usdtRes.ok) {
+          const allRates = await usdtRes.json();
+          // Busca tasa USDT P2P, cripto o promedio de mercado representativo de Binance
+          const usdtItem = allRates.find(item => 
+            item.fuente?.toLowerCase().includes('binance') || 
+            item.fuente?.toLowerCase().includes('cripto') ||
+            item.nombre?.toLowerCase().includes('binance') ||
+            item.fuente === 'paralelo'
+          );
+
+          if (usdtItem && usdtItem.promedio) {
+            state.rates.usdt = {
+              valor: Number(usdtItem.promedio),
+              fechaActualizacion: formatApiDate(usdtItem.fechaActualizacion) || 'P2P Hoy'
+            };
+            usdtUpdated = true;
+          }
+        }
+      } catch (err) {
+        console.warn('Error al consultar USDT Binance:', err);
+      }
+
+      if (bcvUpdated || usdtUpdated) {
+        localStorage.setItem('dolar_vzla_rates_v2', JSON.stringify(state.rates));
+        offlineAlert.classList.add('hidden');
+        statusTime.innerText = `Actualizado: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      } else {
+        offlineAlert.classList.remove('hidden');
+        statusTime.innerText = 'Sin conexión: Usando tasas de respaldo';
+      }
+
+      setTimeout(() => iconRefresh.classList.remove('animate-spin'), 600);
+      updateUI();
+    }
+
+    // 2. Caché local
+    function loadCachedRates() {
+      try {
+        const cached = localStorage.getItem('dolar_vzla_rates_v2');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed.bcv && parsed.usdt) {
+            state.rates = { ...state.rates, ...parsed };
+          }
+        }
+      } catch(e) {
+        console.error(e);
+      }
+      updateUI();
+    }
+
+    // Formateador de fechas de API
+    function formatApiDate(isoDateStr) {
+      if (!isoDateStr) return 'Hoy';
+      try {
+        const d = new Date(isoDateStr);
+        return d.toLocaleDateString('es-VE', { day: '2-digit', month: 'short' }) + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      } catch {
+        return 'Reciente';
+      }
+    }
+
+    // 3. Formateadores numéricos de visualización
+    const formatNumber = (num, minDec = 2, maxDec = 2) => {
+      if (isNaN(num) || num === null || num === '') return '0,00';
+      return Number(num).toLocaleString('es-VE', {
+        minimumFractionDigits: minDec,
+        maximumFractionDigits: maxDec
+      });
+    };
+
+    const formatUSD = (num) => {
+      if (isNaN(num) || num === null || num === '') return '0.00';
+      return Number(num).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    };
+
+    // 4. Obtener la tasa activa actual
+    function getCurrentRate() {
+      if (state.activeType === 'custom' && state.rates.personalizada) {
+        return state.rates.personalizada;
+      }
+      return state.rates[state.activeType]?.valor || 1;
+    }
+
+    // 5. Actualización Visual de la UI
+    function updateUI() {
+      // Actualizar tarjeta BCV
+      document.getElementById('rate-bcv-display').innerText = formatNumber(state.rates.bcv.valor);
+      document.getElementById('time-bcv').innerText = state.rates.bcv.fechaActualizacion || 'Oficial';
+
+      // Actualizar tarjeta USDT Binance
+      document.getElementById('rate-usdt-display').innerText = formatNumber(state.rates.usdt.valor);
+      document.getElementById('time-usdt').innerText = state.rates.usdt.fechaActualizacion || 'Binance P2P';
+
+      // Calcular y mostrar Brecha %
+      if (state.rates.bcv.valor > 0 && state.rates.usdt.valor > 0) {
+        const gap = ((state.rates.usdt.valor - state.rates.bcv.valor) / state.rates.bcv.valor) * 100;
+        const gapElement = document.getElementById('rate-gap');
+        gapElement.innerText = (gap >= 0 ? `+${gap.toFixed(2)}%` : `${gap.toFixed(2)}%`) + ' brecha';
+        gapElement.className = gap > 0 ? 'font-mono font-semibold text-amber-400' : 'font-mono font-semibold text-emerald-400';
+      }
+
+      // Estilos de tarjetas según selección
+      const cardBcv = document.getElementById('card-bcv');
+      const cardUsdt = document.getElementById('card-usdt');
+      const checkBcv = document.getElementById('badge-check-bcv');
+      const checkUsdt = document.getElementById('badge-check-usdt');
+      const activeBadge = document.getElementById('active-rate-badge');
+      const labelUsd = document.getElementById('label-usd');
+      const currencyBadgeUsd = document.getElementById('currency-badge-usd');
+
+      if (state.activeType === 'bcv') {
+        cardBcv.className = 'cursor-pointer relative p-3.5 rounded-2xl border-2 transition-all duration-200 bg-slate-800/90 border-emerald-500 shadow-lg shadow-emerald-500/10 scale-[1.01]';
+        cardUsdt.className = 'cursor-pointer relative p-3.5 rounded-2xl border-2 transition-all duration-200 bg-slate-800/40 border-slate-800 opacity-80';
+        checkBcv.classList.remove('hidden');
+        checkBcv.classList.add('flex');
+        checkUsdt.classList.add('hidden');
+        activeBadge.innerText = 'Tasa: BCV (' + formatNumber(state.rates.bcv.valor) + ' Bs)';
+        activeBadge.className = 'px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        labelUsd.innerText = 'Dólares Estadounidenses (USD)';
+        currencyBadgeUsd.innerText = 'USD $';
+        currencyBadgeUsd.className = 'font-mono text-emerald-400 font-bold';
+      } else if (state.activeType === 'usdt') {
+        cardUsdt.className = 'cursor-pointer relative p-3.5 rounded-2xl border-2 transition-all duration-200 bg-slate-800/90 border-amber-400 shadow-lg shadow-amber-500/10 scale-[1.01]';
+        cardBcv.className = 'cursor-pointer relative p-3.5 rounded-2xl border-2 transition-all duration-200 bg-slate-800/40 border-slate-800 opacity-80';
+        checkUsdt.classList.remove('hidden');
+        checkUsdt.classList.add('flex');
+        checkBcv.classList.add('hidden');
+        activeBadge.innerText = 'Tasa: USDT Binance (' + formatNumber(state.rates.usdt.valor) + ' Bs)';
+        activeBadge.className = 'px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        labelUsd.innerText = 'Tether USD (Binance USDT)';
+        currencyBadgeUsd.innerText = 'USDT ₮';
+        currencyBadgeUsd.className = 'font-mono text-amber-400 font-bold';
+      } else {
+        // Tasa manual
+        cardBcv.className = 'cursor-pointer relative p-3.5 rounded-2xl border-2 transition-all duration-200 bg-slate-800/40 border-slate-800 opacity-70';
+        cardUsdt.className = 'cursor-pointer relative p-3.5 rounded-2xl border-2 transition-all duration-200 bg-slate-800/40 border-slate-800 opacity-70';
+        checkBcv.classList.add('hidden');
+        checkUsdt.classList.add('hidden');
+        activeBadge.innerText = 'Tasa Manual (' + formatNumber(state.rates.personalizada) + ' Bs)';
+        activeBadge.className = 'px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-700 text-slate-300 border border-slate-600';
+      }
+
+      // Re-ejecutar cálculo según último campo editado
+      recalculate();
+    }
+
+    // 6. Selección de tipo de tasa
+    function selectRateType(type) {
+      state.activeType = type;
+      updateUI();
+    }
+
+    // 7. Lógica del convertidor bidireccional
+    function handleUsdChange(value) {
+      state.lastEdited = 'usd';
+      const usd = parseFloat(value);
+      const rate = getCurrentRate();
+      const inputVes = document.getElementById('input-ves');
+      const formattedUsd = document.getElementById('formatted-usd');
+      const formattedVes = document.getElementById('formatted-ves');
+      const unit = state.activeType === 'usdt' ? 'USDT' : '$';
+
+      if (!isNaN(usd) && usd >= 0) {
+        const vesResult = usd * rate;
+        inputVes.value = vesResult % 1 === 0 ? vesResult : vesResult.toFixed(2);
+        formattedUsd.innerText = `${unit} ${formatUSD(usd)}`;
+        formattedVes.innerText = `Bs. ${formatNumber(vesResult)}`;
+      } else {
+        inputVes.value = '';
+        formattedUsd.innerText = `${unit} 0.00`;
+        formattedVes.innerText = 'Bs. 0,00';
+      }
+    }
+
+    function handleVesChange(value) {
+      state.lastEdited = 'ves';
+      const ves = parseFloat(value);
+      const rate = getCurrentRate();
+      const inputUsd = document.getElementById('input-usd');
+      const formattedUsd = document.getElementById('formatted-usd');
+      const formattedVes = document.getElementById('formatted-ves');
+      const unit = state.activeType === 'usdt' ? 'USDT' : '$';
+
+      if (!isNaN(ves) && ves >= 0 && rate > 0) {
+        const usdResult = ves / rate;
+        inputUsd.value = usdResult.toFixed(2);
+        formattedUsd.innerText = `${unit} ${formatUSD(usdResult)}`;
+        formattedVes.innerText = `Bs. ${formatNumber(ves)}`;
+      } else {
+        inputUsd.value = '';
+        formattedUsd.innerText = `${unit} 0.00`;
+        formattedVes.innerText = 'Bs. 0,00';
+      }
+    }
+
+    function recalculate() {
+      if (state.lastEdited === 'usd') {
+        const inputUsd = document.getElementById('input-usd');
+        handleUsdChange(inputUsd.value);
+      } else {
+        const inputVes = document.getElementById('input-ves');
+        handleVesChange(inputVes.value);
+      }
+    }
+
+    // Botones de monto rápido
+    function setFastUsd(amount) {
+      const inputUsd = document.getElementById('input-usd');
+      inputUsd.value = amount;
+      handleUsdChange(amount);
+    }
+
+    // Botón de limpiar
+    function clearInputs() {
+      document.getElementById('input-usd').value = '';
+      document.getElementById('input-ves').value = '';
+      const unit = state.activeType === 'usdt' ? 'USDT' : '$';
+      document.getElementById('formatted-usd').innerText = `${unit} 0.00`;
+      document.getElementById('formatted-ves').innerText = 'Bs. 0,00';
+    }
+
+    // Intercambiar posición de los inputs (Switch ⇄)
+    function swapInputs() {
+      const container = document.getElementById('converter-container');
+      const boxUsd = document.getElementById('box-usd');
+      const boxVes = document.getElementById('box-ves');
+      
+      state.isSwapped = !state.isSwapped;
+
+      if (state.isSwapped) {
+        container.insertBefore(boxVes, container.firstChild);
+      } else {
+        container.insertBefore(boxUsd, container.firstChild);
+      }
+    }
+
+    // Tasa manual
+    function applyCustomRate() {
+      const customVal = parseFloat(document.getElementById('input-custom-rate').value);
+      if (!isNaN(customVal) && customVal > 0) {
+        state.rates.personalizada = customVal;
+        state.activeType = 'custom';
+        toggleModal('modal-custom', false);
+        updateUI();
+        showToast('Tasa personalizada activada');
+      }
+    }
+
+    function resetToApiRates() {
+      state.activeType = 'bcv';
+      state.rates.personalizada = null;
+      toggleModal('modal-custom', false);
+      updateUI();
+      showToast('Restablecido a tasas en vivo');
+    }
+
+    // Modal Helpers
+    function toggleModal(id, show) {
+      const modal = document.getElementById(id);
+      if (show) {
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    // Copiar al portapapeles
+    function copyToClipboard(elementId) {
+      const input = document.getElementById(elementId);
+      if (!input || !input.value) return;
+
+      const rateLabel = state.activeType === 'usdt' ? 'USDT Binance' : state.activeType.toUpperCase();
+      const textToCopy = `${formatNumber(input.value)} Bs. (Tasa ${rateLabel})`;
+
+      const tempInput = document.createElement('textarea');
+      tempInput.value = textToCopy;
+      tempInput.setAttribute('readonly', '');
+      tempInput.style.position = 'absolute';
+      tempInput.style.left = '-9999px';
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      
+      try {
+        document.execCommand('copy');
+        showToast(`Copiado: ${textToCopy}`);
+      } catch (err) {
+        console.error('No se pudo copiar', err);
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.classList.remove('opacity-0', 'translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-3');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2300);
+    }
+  </script>
+</body>
+</html>
