@@ -5,13 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0B0F17">
+    <meta name="application-name" content="Divisas Venezuela">
+    <meta name="apple-mobile-web-app-title" content="Divisas Venezuela">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Divisas Venezuela: BCV, USDT, BRL & COP</title>
+    <title>Divisas Venezuela</title>
+    <link id="appFavicon" rel="icon" type="image/svg+xml" href="">
+    <link id="appTouchIcon" rel="apple-touch-icon" href="">
+    <link id="appManifest" rel="manifest" href="">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -25,11 +30,6 @@
                         mdCard: '#141B29',
                         mdCardHover: '#1B2436',
                         mdOutline: '#263147',
-                        mdPrimary: '#38BDF8',
-                        mdEmerald: '#10B981',
-                        mdAmber: '#F59E0B',
-                        mdBrazil: '#22C55E',
-                        mdColombia: '#FACC15',
                     }
                 }
             }
@@ -40,11 +40,15 @@
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
         }
-        body {
+        html, body {
+            height: 100dvh;
+            max-height: 100dvh;
+            overflow: hidden;
             background-color: #0B0F17;
             color: #F8FAFC;
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
         }
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
@@ -59,8 +63,8 @@
             -webkit-appearance: none;
         }
         ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
+            width: 4px;
+            height: 4px;
         }
         ::-webkit-scrollbar-track {
             background: #0B0F17;
@@ -71,252 +75,341 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between bg-mdSurface text-slate-100 antialiased">
+<body class="h-[100dvh] w-full flex flex-col justify-between bg-mdSurface text-slate-100 antialiased select-none">
 
-    <!-- Contenedor Principal Material Design 3 -->
-    <div class="w-full max-w-md mx-auto px-4 pt-4 pb-8 flex-1 flex flex-col gap-3.5">
+    <!-- Contenedor Principal 9:16 Pantalla Única Sin Scroll -->
+    <div class="w-full max-w-md mx-auto h-full px-3 py-2 flex flex-col justify-between gap-1.5 overflow-hidden">
 
-        <!-- Barra Superior Nativa (Sin avisos de actualización ni bloqueos) -->
-        <header class="flex items-center justify-between bg-mdCard/90 backdrop-blur-md border border-mdOutline rounded-3xl px-4 py-3 shadow-lg">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 via-emerald-500 to-amber-400 flex items-center justify-center shadow-md shrink-0">
-                    <span class="font-extrabold text-slate-950 text-sm tracking-tighter">VES</span>
+        <!-- 1. Encabezado Oficial "Divisas Venezuela" con Icono SVG Personalizado -->
+        <header class="flex items-center justify-between bg-mdCard/95 border border-mdOutline rounded-2xl px-2.5 py-1.5 shadow-md shrink-0">
+            <div class="flex items-center gap-2 min-w-0">
+                <!-- Icono SVG Oficial: Doble borde cian brillante + Mapa tricolor Venezuela + $, ₮, R$, COL$ -->
+                <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg shrink-0 bg-[#071324]">
+                    <svg viewBox="0 0 120 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bgNavy" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0D2542"/>
+                                <stop offset="55%" stop-color="#091A30"/>
+                                <stop offset="100%" stop-color="#071324"/>
+                            </linearGradient>
+                            <linearGradient id="cyanFrame" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#7DD3FC"/>
+                                <stop offset="50%" stop-color="#0284C7"/>
+                                <stop offset="100%" stop-color="#38BDF8"/>
+                            </linearGradient>
+                            <linearGradient id="goldUsd" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#FDE047"/>
+                                <stop offset="50%" stop-color="#FBBF24"/>
+                                <stop offset="100%" stop-color="#D97706"/>
+                            </linearGradient>
+                            <linearGradient id="emeraldUsdt" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#34D399"/>
+                                <stop offset="55%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                            <linearGradient id="silverBrl" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#F8FAFC"/>
+                                <stop offset="55%" stop-color="#CBD5E1"/>
+                                <stop offset="100%" stop-color="#94A3B8"/>
+                            </linearGradient>
+                            <linearGradient id="bronzeCop" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#F59E0B"/>
+                                <stop offset="50%" stop-color="#D97706"/>
+                                <stop offset="100%" stop-color="#92400E"/>
+                            </linearGradient>
+                            <clipPath id="venMapClip">
+                                <path d="M31 53 L35 45 L41 44 L44 48 L51 46 L59 46 L68 47 L75 49 L83 51 L88 55 L83 61 L86 67 L79 73 L74 75 L69 83 L63 86 L58 81 L55 74 L49 71 L43 66 L36 62 L31 57 Z"/>
+                            </clipPath>
+                            <filter id="dropShadow" x="-15%" y="-15%" width="130%" height="130%">
+                                <feDropShadow dx="0" dy="1.8" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.7"/>
+                            </filter>
+                        </defs>
+
+                        <!-- Fondo Azul Marino Profundo -->
+                        <rect x="2" y="2" width="116" height="116" rx="26" fill="url(#bgNavy)"/>
+
+                        <!-- Líneas de gráfica financiera sutiles -->
+                        <polyline points="12,86 30,72 44,80 66,58 82,66 108,42" fill="none" stroke="#38BDF8" stroke-width="1.3" stroke-opacity="0.22"/>
+                        <polyline points="12,72 28,60 46,68 72,44 90,52 108,30" fill="none" stroke="#FBBF24" stroke-width="1.1" stroke-opacity="0.18"/>
+
+                        <!-- Doble contorno azul cian brillante/iluminado -->
+                        <rect x="4" y="4" width="112" height="112" rx="24" fill="none" stroke="url(#cyanFrame)" stroke-width="3"/>
+                        <rect x="8.5" y="8.5" width="103" height="103" rx="20" fill="none" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.55"/>
+
+                        <!-- Mapa Central de Venezuela con Bandera Tricolor y 8 Estrellas -->
+                        <g filter="url(#dropShadow)">
+                            <g clip-path="url(#venMapClip)">
+                                <rect x="28" y="42" width="64" height="14" fill="#FACC15"/>
+                                <rect x="28" y="56" width="64" height="14" fill="#1D4ED8"/>
+                                <rect x="28" y="70" width="64" height="18" fill="#DC2626"/>
+                                <!-- Arco de 8 estrellas blancas -->
+                                <g fill="#FFFFFF">
+                                    <circle cx="48" cy="64.5" r="1.1"/>
+                                    <circle cx="51.2" cy="62.2" r="1.1"/>
+                                    <circle cx="55" cy="60.7" r="1.1"/>
+                                    <circle cx="59" cy="60.1" r="1.1"/>
+                                    <circle cx="63" cy="60.5" r="1.1"/>
+                                    <circle cx="66.8" cy="61.7" r="1.1"/>
+                                    <circle cx="70.2" cy="63.6" r="1.1"/>
+                                    <circle cx="73" cy="66" r="1.1"/>
+                                </g>
+                            </g>
+                            <path d="M31 53 L35 45 L41 44 L44 48 L51 46 L59 46 L68 47 L75 49 L83 51 L88 55 L83 61 L86 67 L79 73 L74 75 L69 83 L63 86 L58 81 L55 74 L49 71 L43 66 L36 62 L31 57 Z"
+                                  fill="none" stroke="#FDE047" stroke-width="0.9" stroke-opacity="0.7"/>
+                        </g>
+
+                        <!-- Esquina Superior Izquierda: Dólar ($) Dorado Metálico -->
+                        <text x="24" y="38" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="27" fill="url(#goldUsd)" stroke="#78350F" stroke-width="0.7" text-anchor="middle" filter="url(#dropShadow)">$</text>
+
+                        <!-- Esquina Superior Derecha: Tether USDT (₮) Verde Esmeralda -->
+                        <text x="95" y="38" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="26" fill="url(#emeraldUsdt)" stroke="#064E3B" stroke-width="0.7" text-anchor="middle" filter="url(#dropShadow)">₮</text>
+
+                        <!-- Esquina Inferior Izquierda: Real Brasileño (R$) Plateado con Borde Dorado -->
+                        <text x="28" y="103" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="21" fill="url(#silverBrl)" stroke="#D97706" stroke-width="0.9" text-anchor="middle" filter="url(#dropShadow)">R$</text>
+
+                        <!-- Esquina Inferior Derecha: Peso Colombiano (COL$) Bronce/Cobre Metálico -->
+                        <text x="88" y="103" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="16.5" fill="url(#bronzeCop)" stroke="#451A03" stroke-width="0.6" text-anchor="middle" filter="url(#dropShadow)">COL$</text>
+                    </svg>
                 </div>
-                <div>
-                    <h1 class="text-sm font-bold text-white leading-tight">Divisas Venezuela</h1>
-                    <div class="flex items-center gap-1.5 mt-0.5">
-                        <span id="statusDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span id="statusText" class="text-[11px] text-slate-400 font-medium">Sincronizando tasas...</span>
+                <div class="min-w-0">
+                    <h1 class="text-xs sm:text-sm font-extrabold text-white leading-tight truncate tracking-tight">Divisas Venezuela</h1>
+                    <div class="flex items-center gap-1 mt-0.5">
+                        <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                        <span id="statusText" class="text-[10px] text-slate-400 font-medium truncate">Sincronizando...</span>
                     </div>
                 </div>
             </div>
 
-            <div class="flex items-center gap-1.5">
-                <button id="btnRefresh" type="button" title="Actualizar tasas en vivo" class="p-2.5 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 transition text-sky-400 border border-slate-700/60">
-                    <svg id="refreshIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <div class="flex items-center gap-1 shrink-0">
+                <button id="btnRefresh" type="button" title="Actualizar tasas en vivo" class="p-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 transition text-sky-400 border border-slate-700/60">
+                    <svg id="refreshIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
                 </button>
-                <button id="btnOpenHistory" type="button" title="Historial de cálculos" class="p-2.5 rounded-2xl bg-slate-800/80 hover:bg-slate-700 active:scale-95 transition text-amber-400 border border-slate-700/60 relative">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <button id="btnOpenHistory" type="button" title="Historial de cálculos" class="p-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 transition text-amber-400 border border-slate-700/60 relative">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span id="historyBadge" class="hidden absolute -top-1 -right-1 bg-amber-500 text-slate-950 text-[9px] font-extrabold px-1.5 py-0.2 rounded-full">0</span>
+                    <span id="historyBadge" class="hidden absolute -top-1 -right-1 bg-amber-500 text-slate-950 text-[8px] font-extrabold px-1 rounded-full">0</span>
                 </button>
             </div>
         </header>
 
-        <!-- 1. Cuadrícula 2x2 de Tasas en Vivo -->
-        <section class="grid grid-cols-2 gap-2.5">
+        <!-- 2. Cuadrícula 2x2 Compacta de Tasas en Vivo -->
+        <section class="grid grid-cols-2 gap-1.5 shrink-0">
             <!-- Tarjeta 1: Dólar Oficial BCV -->
-            <button type="button" data-card-currency="USD_BCV" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border-2 border-sky-500/70 rounded-3xl p-3.5 transition active:scale-[0.98] shadow-md flex flex-col justify-between">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-sky-400 bg-sky-500/15 px-2 py-0.5 rounded-full">BCV Oficial</span>
-                    <span class="text-[10px] font-bold text-slate-400">USD $</span>
+            <button type="button" data-card-currency="USD_BCV" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border-2 border-sky-400 rounded-2xl px-2.5 py-2 transition active:scale-[0.98] shadow">
+                <div class="flex items-center justify-between gap-1">
+                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-sky-400 bg-sky-500/15 px-1.5 py-0.5 rounded-md">BCV Oficial</span>
+                    <span class="text-[9px] font-bold text-slate-400">USD $</span>
                 </div>
-                <div class="mt-2.5">
-                    <div id="cardBcvVal" class="text-lg font-extrabold text-white tracking-tight">Bs 911,62</div>
-                    <div class="text-[11px] text-slate-400 mt-0.5">Banco Central</div>
-                </div>
+                <div id="cardBcvVal" class="text-sm sm:text-base font-extrabold text-white tracking-tight mt-1 leading-none">Bs 911,62</div>
+                <div class="text-[9px] text-slate-400 mt-0.5 truncate">Banco Central</div>
             </button>
 
             <!-- Tarjeta 2: USDT Binance P2P -->
-            <button type="button" data-card-currency="USDT" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border border-mdOutline rounded-3xl p-3.5 transition active:scale-[0.98] shadow-md flex flex-col justify-between">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-500/15 px-2 py-0.5 rounded-full">USDT P2P</span>
-                    <span class="text-[10px] font-bold text-slate-400">Binance</span>
+            <button type="button" data-card-currency="USDT" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border border-mdOutline rounded-2xl px-2.5 py-2 transition active:scale-[0.98] shadow">
+                <div class="flex items-center justify-between gap-1">
+                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-500/15 px-1.5 py-0.5 rounded-md">USDT Binance</span>
+                    <span class="text-[9px] font-bold text-slate-400">P2P ₮</span>
                 </div>
-                <div class="mt-2.5">
-                    <div id="cardUsdtVal" class="text-lg font-extrabold text-white tracking-tight">Bs 1.064,04</div>
-                    <div class="text-[11px] text-slate-400 mt-0.5">Referencia P2P</div>
-                </div>
+                <div id="cardUsdtVal" class="text-sm sm:text-base font-extrabold text-white tracking-tight mt-1 leading-none">Bs 1.064,04</div>
+                <div class="text-[9px] text-slate-400 mt-0.5 truncate">Referencia P2P</div>
             </button>
 
             <!-- Tarjeta 3: Real Brasileño (BRL - R$) -->
-            <button type="button" data-card-currency="BRL" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border border-mdOutline rounded-3xl p-3.5 transition active:scale-[0.98] shadow-md flex flex-col justify-between">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded-full">BRL R$</span>
-                    <span id="cardUsdBrlVal" class="text-[10px] font-bold text-emerald-300">1$ = 5,65 R$</span>
+            <button type="button" data-card-currency="BRL" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border border-mdOutline rounded-2xl px-2.5 py-2 transition active:scale-[0.98] shadow">
+                <div class="flex items-center justify-between gap-1">
+                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-emerald-400 bg-emerald-500/15 px-1.5 py-0.5 rounded-md">BRL R$</span>
+                    <span id="cardUsdBrlVal" class="text-[9px] font-bold text-emerald-300 truncate">1$=5,65 R$</span>
                 </div>
-                <div class="mt-2.5">
-                    <div id="cardBrlVesVal" class="text-base font-extrabold text-white tracking-tight">Bs 161,35 / R$</div>
-                    <div class="text-[10px] text-slate-400 mt-0.5 truncate">Real Brasileño</div>
-                </div>
+                <div id="cardBrlVesVal" class="text-sm sm:text-base font-extrabold text-white tracking-tight mt-1 leading-none">Bs 161,35 / R$</div>
+                <div class="text-[9px] text-slate-400 mt-0.5 truncate">Real Brasileño</div>
             </button>
 
             <!-- Tarjeta 4: Peso Colombiano (COP - $) -->
-            <button type="button" data-card-currency="COP" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border border-mdOutline rounded-3xl p-3.5 transition active:scale-[0.98] shadow-md flex flex-col justify-between">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-yellow-300 bg-yellow-400/15 px-2 py-0.5 rounded-full">COP $</span>
-                    <span id="cardUsdCopVal" class="text-[10px] font-bold text-yellow-200">1$ = 3.334,85</span>
+            <button type="button" data-card-currency="COP" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border border-mdOutline rounded-2xl px-2.5 py-2 transition active:scale-[0.98] shadow">
+                <div class="flex items-center justify-between gap-1">
+                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-yellow-300 bg-yellow-400/15 px-1.5 py-0.5 rounded-md">COP $</span>
+                    <span id="cardUsdCopVal" class="text-[9px] font-bold text-yellow-200 truncate">1$=3.334,85</span>
                 </div>
-                <div class="mt-2.5">
-                    <div id="cardCopVesVal" class="text-base font-extrabold text-white tracking-tight">Bs 273,36 / 1k</div>
-                    <div id="cardCopUnitSub" class="text-[10px] text-slate-400 mt-0.5 truncate">1 COP = Bs 0,2734</div>
-                </div>
+                <div id="cardCopVesVal" class="text-sm sm:text-base font-extrabold text-white tracking-tight mt-1 leading-none">Bs 273,36 / 1k</div>
+                <div id="cardCopUnitSub" class="text-[9px] text-slate-400 mt-0.5 truncate">1 COP = Bs 0,2734</div>
             </button>
         </section>
 
-        <!-- Barra de Referencia Cruzada (BCV vs USDT) + Botón Tasa Manual -->
-        <section class="bg-mdCard border border-mdOutline rounded-3xl px-3.5 py-2.5 flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-                <span class="text-[11px] text-slate-400 font-medium">Base BRL/COP:</span>
-                <div class="inline-flex bg-slate-900 border border-slate-800 rounded-2xl p-0.5">
-                    <button id="btnRefBcv" type="button" class="px-2.5 py-1 rounded-xl text-[11px] font-bold bg-sky-500 text-slate-950 transition">BCV</button>
-                    <button id="btnRefUsdt" type="button" class="px-2.5 py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition">USDT</button>
+        <!-- 3. Barra de Base Cruzada (BCV vs USDT) + Botón Modal Tasa Manual -->
+        <section class="bg-mdCard border border-mdOutline rounded-2xl px-2.5 py-1.5 flex items-center justify-between gap-1.5 shrink-0">
+            <div class="flex items-center gap-1.5">
+                <span class="text-[10px] text-slate-400 font-medium">Base BRL/COP:</span>
+                <div class="inline-flex bg-slate-900 border border-slate-800 rounded-xl p-0.5">
+                    <button id="btnRefBcv" type="button" class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-sky-500 text-slate-950 transition">BCV</button>
+                    <button id="btnRefUsdt" type="button" class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold text-slate-400 hover:text-white transition">USDT</button>
                 </div>
             </div>
-            <button id="btnToggleManual" type="button" class="px-3 py-1.5 rounded-2xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/35 text-[11px] font-bold text-purple-300 active:scale-95 transition">
+            <button id="btnOpenManualModal" type="button" class="px-2.5 py-1 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/35 text-[10px] font-extrabold text-purple-300 active:scale-95 transition">
                 Tasa Manual
             </button>
         </section>
 
-        <!-- Panel Desplegable de Tasa Manual Personalizada (Bs por 1 USD) -->
-        <div id="manualPanel" class="hidden bg-mdCard border border-purple-500/40 rounded-3xl p-3.5 flex items-center justify-between gap-3">
-            <div>
-                <label for="manualRateInput" class="text-xs font-bold text-purple-300 block">Tasa Manual (Bs por 1 USD)</label>
-                <span class="text-[11px] text-slate-400">Aplica a USD Manual y cruces</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <input id="manualRateInput" type="number" step="any" inputmode="decimal" placeholder="950.00"
-                    class="w-28 bg-slate-900 border border-purple-500/50 rounded-2xl px-3 py-2 text-right text-sm font-extrabold text-white focus:outline-none focus:border-purple-400">
-                <button id="btnUseManualCurrency" type="button" class="px-3 py-2 rounded-2xl bg-purple-500 text-slate-950 text-xs font-extrabold active:scale-95 transition">
-                    Usar
-                </button>
-            </div>
-        </div>
-
-        <!-- 2. Convertidor Bidireccional Multimoneda en Vivo -->
-        <main class="bg-mdCard border border-mdOutline rounded-3xl p-4 shadow-xl flex flex-col gap-3">
+        <!-- 4. Convertidor Bidireccional Multimoneda en Vivo -->
+        <main class="bg-mdCard border border-mdOutline rounded-2xl p-2.5 shadow-lg flex-1 min-h-0 flex flex-col justify-between gap-1.5">
 
             <!-- Campo Moneda Origen -->
-            <div class="bg-slate-900/95 border border-slate-800 focus-within:border-sky-500/70 rounded-2xl p-3.5 transition">
-                <div class="flex items-center justify-between gap-2 mb-2">
-                    <div class="relative flex-1">
+            <div class="bg-slate-900/95 border border-slate-800 focus-within:border-sky-500/70 rounded-xl px-2.5 py-1.5 transition">
+                <div class="flex items-center justify-between gap-1.5 mb-1">
+                    <div class="relative flex-1 min-w-0">
                         <select id="selectFrom" aria-label="Moneda de origen"
-                            class="w-full bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-xs font-bold text-sky-300 rounded-xl pl-3 pr-8 py-2 focus:outline-none focus:border-sky-400 cursor-pointer">
+                            class="w-full bg-slate-800/95 hover:bg-slate-800 border border-slate-700/80 text-[11px] font-bold text-sky-300 rounded-lg pl-2 pr-6 py-1 focus:outline-none focus:border-sky-400 cursor-pointer truncate">
                             <option value="USD_BCV">🇺🇸 Dólar BCV (USD)</option>
                             <option value="USDT">🪙 USDT Binance (USDT)</option>
                             <option value="VES">🇻🇪 Bolívares (VES)</option>
-                            <option value="BRL">🇧🇷 Real Brasileño (BRL - R$)</option>
+                            <option value="BRL">🇧🇷 Real Brasileño (BRL)</option>
                             <option value="COP">🇨🇴 Peso Colombiano (COP)</option>
-                            <option value="USD_MANUAL">⚙️ Dólar Tasa Manual (USD)</option>
+                            <option value="USD_MANUAL">⚙️ Dólar Manual (USD)</option>
                         </select>
-                        <span class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]">▼</span>
+                        <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-[9px]">▼</span>
                     </div>
-                    <button id="btnCopyFrom" type="button" class="text-[11px] font-semibold text-slate-400 hover:text-white px-2.5 py-2 rounded-xl bg-slate-800/70 active:scale-95 transition shrink-0">
+                    <button id="btnCopyFrom" type="button" class="text-[10px] font-bold text-slate-300 hover:text-white px-2 py-1 rounded-lg bg-slate-800/80 active:scale-95 transition shrink-0">
                         Copiar
                     </button>
                 </div>
 
-                <div class="flex items-center gap-2">
-                    <span id="symbolFrom" class="text-lg font-extrabold text-slate-400 shrink-0">$</span>
+                <div class="flex items-center gap-1.5">
+                    <span id="symbolFrom" class="text-base font-extrabold text-slate-400 shrink-0">$</span>
                     <input id="inputFrom" type="number" step="any" inputmode="decimal" placeholder="1.00" value="1"
-                        class="w-full bg-transparent text-2xl font-extrabold text-white focus:outline-none">
-                    <button id="btnClearInputs" type="button" class="text-[11px] font-semibold text-slate-400 hover:text-rose-400 px-2 py-1 rounded-xl bg-slate-800/60 shrink-0">
+                        class="w-full bg-transparent text-xl font-extrabold text-white focus:outline-none leading-none">
+                    <button id="btnClearInputs" type="button" class="text-[10px] font-bold text-slate-400 hover:text-rose-400 px-1.5 py-0.5 rounded-lg bg-slate-800/70 shrink-0">
                         Limpiar
                     </button>
                 </div>
             </div>
 
             <!-- Fila Central: Tasa Directa + Botón Intercambio Rápido (⇄) -->
-            <div class="flex items-center justify-between px-1">
-                <span id="pairRateText" class="text-[11px] font-medium text-slate-400 truncate pr-2">
-                    1 USD = <strong class="text-slate-200">911,62 Bs</strong>
+            <div class="flex items-center justify-between px-1 shrink-0">
+                <span id="pairRateText" class="text-[10px] font-medium text-slate-400 truncate pr-2">
+                    1 USD BCV = <strong class="text-slate-200">911,62 VES</strong>
                 </span>
-                <button id="btnSwapCurrencies" type="button" title="Intercambiar monedas origen y destino"
-                    class="w-10 h-10 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-sky-400 active:rotate-180 transition-transform duration-300 shrink-0 shadow">
-                    <span class="text-base font-extrabold leading-none">⇄</span>
+                <button id="btnSwapCurrencies" type="button" title="Intercambiar monedas"
+                    class="w-7 h-7 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-sky-400 active:rotate-180 transition-transform duration-300 shrink-0 shadow">
+                    <span class="text-sm font-extrabold leading-none">⇄</span>
                 </button>
             </div>
 
             <!-- Campo Moneda Destino -->
-            <div class="bg-slate-900/95 border border-slate-800 focus-within:border-emerald-500/70 rounded-2xl p-3.5 transition">
-                <div class="flex items-center justify-between gap-2 mb-2">
-                    <div class="relative flex-1">
+            <div class="bg-slate-900/95 border border-slate-800 focus-within:border-emerald-500/70 rounded-xl px-2.5 py-1.5 transition">
+                <div class="flex items-center justify-between gap-1.5 mb-1">
+                    <div class="relative flex-1 min-w-0">
                         <select id="selectTo" aria-label="Moneda de destino"
-                            class="w-full bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-xs font-bold text-emerald-300 rounded-xl pl-3 pr-8 py-2 focus:outline-none focus:border-emerald-400 cursor-pointer">
+                            class="w-full bg-slate-800/95 hover:bg-slate-800 border border-slate-700/80 text-[11px] font-bold text-emerald-300 rounded-lg pl-2 pr-6 py-1 focus:outline-none focus:border-emerald-400 cursor-pointer truncate">
                             <option value="VES" selected>🇻🇪 Bolívares (VES)</option>
                             <option value="USD_BCV">🇺🇸 Dólar BCV (USD)</option>
                             <option value="USDT">🪙 USDT Binance (USDT)</option>
-                            <option value="BRL">🇧🇷 Real Brasileño (BRL - R$)</option>
+                            <option value="BRL">🇧🇷 Real Brasileño (BRL)</option>
                             <option value="COP">🇨🇴 Peso Colombiano (COP)</option>
-                            <option value="USD_MANUAL">⚙️ Dólar Tasa Manual (USD)</option>
+                            <option value="USD_MANUAL">⚙️ Dólar Manual (USD)</option>
                         </select>
-                        <span class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]">▼</span>
+                        <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-[9px]">▼</span>
                     </div>
-                    <button id="btnCopyTo" type="button" class="text-[11px] font-semibold text-slate-400 hover:text-white px-2.5 py-2 rounded-xl bg-slate-800/70 active:scale-95 transition shrink-0">
+                    <button id="btnCopyTo" type="button" class="text-[10px] font-bold text-slate-300 hover:text-white px-2 py-1 rounded-lg bg-slate-800/80 active:scale-95 transition shrink-0">
                         Copiar
                     </button>
                 </div>
 
-                <div class="flex items-center gap-2">
-                    <span id="symbolTo" class="text-lg font-extrabold text-slate-400 shrink-0">Bs</span>
+                <div class="flex items-center gap-1.5">
+                    <span id="symbolTo" class="text-base font-extrabold text-slate-400 shrink-0">Bs</span>
                     <input id="inputTo" type="number" step="any" inputmode="decimal" placeholder="0.00"
-                        class="w-full bg-transparent text-2xl font-extrabold text-white focus:outline-none">
+                        class="w-full bg-transparent text-xl font-extrabold text-white focus:outline-none leading-none">
                 </div>
             </div>
 
-            <!-- Botones de Montos Rápidos Dinámicos según Moneda Origen -->
-            <div id="quickAmountsRow" class="grid grid-cols-6 gap-1.5">
-                <!-- Generado dinámicamente (1..100 o 5.000..200.000 para COP) -->
+            <!-- Chips de Montos Rápidos Dinámicos -->
+            <div id="quickAmountsRow" class="grid grid-cols-6 gap-1 shrink-0">
+                <!-- Generado dinámicamente -->
             </div>
 
-            <!-- Panel Compacto de Equivalencias Simultáneas en Todas las Monedas -->
-            <div class="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-3">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Equivalencias Simultáneas</span>
-                    <button id="btnCopyWhatsapp" type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 text-[11px] font-bold text-emerald-300 active:scale-95 transition">
-                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+            <!-- Panel Compacto de Equivalencias Simultáneas + Botón WhatsApp -->
+            <div class="bg-slate-950/75 border border-slate-800/90 rounded-xl px-2.5 py-1.5 shrink-0">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Equivalencias en Vivo</span>
+                    <button id="btnCopyWhatsapp" type="button" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 text-[10px] font-extrabold text-emerald-300 active:scale-95 transition">
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
                         </svg>
-                        <span>Copiar WhatsApp</span>
+                        <span>WhatsApp</span>
                     </button>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-left">
-                    <div class="bg-slate-900/80 rounded-xl px-2.5 py-1.5 border border-slate-800/70">
-                        <span class="text-[10px] text-slate-400 block">USD BCV</span>
-                        <span id="eqUsdBcv" class="text-xs font-extrabold text-sky-300">$ 1,00</span>
+                <div class="grid grid-cols-3 gap-1 text-left">
+                    <div class="bg-slate-900/90 rounded-lg px-1.5 py-1 border border-slate-800/70">
+                        <span class="text-[8px] text-slate-400 block leading-none">USD BCV</span>
+                        <span id="eqUsdBcv" class="text-[10px] font-extrabold text-sky-300 truncate block mt-0.5">$ 1,00</span>
                     </div>
-                    <div class="bg-slate-900/80 rounded-xl px-2.5 py-1.5 border border-slate-800/70">
-                        <span class="text-[10px] text-slate-400 block">USDT Binance</span>
-                        <span id="eqUsdt" class="text-xs font-extrabold text-amber-300">0,86 USDT</span>
+                    <div class="bg-slate-900/90 rounded-lg px-1.5 py-1 border border-slate-800/70">
+                        <span class="text-[8px] text-slate-400 block leading-none">USDT Binance</span>
+                        <span id="eqUsdt" class="text-[10px] font-extrabold text-amber-300 truncate block mt-0.5">0,86 ₮</span>
                     </div>
-                    <div class="bg-slate-900/80 rounded-xl px-2.5 py-1.5 border border-slate-800/70">
-                        <span class="text-[10px] text-slate-400 block">Bolívares</span>
-                        <span id="eqVes" class="text-xs font-extrabold text-white">Bs 911,62</span>
+                    <div class="bg-slate-900/90 rounded-lg px-1.5 py-1 border border-slate-800/70">
+                        <span class="text-[8px] text-slate-400 block leading-none">Bolívares</span>
+                        <span id="eqVes" class="text-[10px] font-extrabold text-white truncate block mt-0.5">Bs 911,62</span>
                     </div>
-                    <div class="bg-slate-900/80 rounded-xl px-2.5 py-1.5 border border-slate-800/70">
-                        <span class="text-[10px] text-slate-400 block">Real Brasileño</span>
-                        <span id="eqBrl" class="text-xs font-extrabold text-emerald-300">R$ 5,65</span>
+                    <div class="bg-slate-900/90 rounded-lg px-1.5 py-1 border border-slate-800/70">
+                        <span class="text-[8px] text-slate-400 block leading-none">Real BRL</span>
+                        <span id="eqBrl" class="text-[10px] font-extrabold text-emerald-300 truncate block mt-0.5">R$ 5,65</span>
                     </div>
-                    <div class="bg-slate-900/80 rounded-xl px-2.5 py-1.5 border border-slate-800/70 col-span-2 sm:col-span-2">
-                        <span class="text-[10px] text-slate-400 block">Peso Colombiano</span>
-                        <span id="eqCop" class="text-xs font-extrabold text-yellow-300">$ 3.334,85 COP</span>
+                    <div class="bg-slate-900/90 rounded-lg px-1.5 py-1 border border-slate-800/70 col-span-2">
+                        <span class="text-[8px] text-slate-400 block leading-none">Peso Colombiano</span>
+                        <span id="eqCop" class="text-[10px] font-extrabold text-yellow-300 truncate block mt-0.5">$ 3.334,85 COP</span>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Pie de Página Visible -->
-        <footer class="text-center pt-1 pb-2">
-            <p class="text-[11px] text-slate-500 font-medium">
-                Funcionamiento autónomo • Sin ventanas emergentes • Modo Offline
-            </p>
-            <p class="text-xs font-bold text-slate-400 mt-1">
-                Created by César Ramírez León
+        <!-- 5. Pie de Página Sutil con Atribución Exacta -->
+        <footer class="text-center shrink-0 py-0.5">
+            <p class="text-[10px] font-semibold text-slate-400 leading-none">
+                Divisas Venezuela • <span class="text-slate-300 font-bold">Created by César Ramírez León</span>
             </p>
         </footer>
     </div>
 
-    <!-- Modal 3: Historial Local Automático (localStorage) con Reutilización -->
+    <!-- Modal 1: Editor de Tasa Manual Personalizada -->
+    <div id="manualModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-mdCard border border-purple-500/40 rounded-3xl w-full max-w-sm p-5 shadow-2xl flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-base font-extrabold text-white">Tasa Manual Personalizada</h2>
+                    <p class="text-[11px] text-slate-400">Define tu tasa en Bolívares por 1 USD</p>
+                </div>
+                <button id="btnCloseManualModal" type="button" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center font-bold">
+                    ✕
+                </button>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3">
+                <label for="manualRateInput" class="text-[11px] font-bold text-purple-300 block mb-1.5">1 USD Manual equivale a (Bs):</label>
+                <input id="manualRateInput" type="number" step="any" inputmode="decimal" placeholder="950.00"
+                    class="w-full bg-slate-950 border border-purple-500/50 rounded-xl px-3 py-2.5 text-right text-xl font-extrabold text-white focus:outline-none focus:border-purple-400">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <button id="btnSaveManualOnly" type="button" class="py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition active:scale-95">
+                    Guardar Tasa
+                </button>
+                <button id="btnUseManualCurrency" type="button" class="py-2.5 rounded-2xl bg-purple-500 hover:bg-purple-400 text-slate-950 font-extrabold text-xs transition active:scale-95">
+                    Guardar y Usar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Historial Local Automático (localStorage) -->
     <div id="historyModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4">
         <div class="bg-mdCard border border-mdOutline rounded-3xl w-full max-w-md p-5 shadow-2xl flex flex-col gap-3 max-h-[85vh]">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-base font-bold text-white">Historial de Cálculos</h2>
-                    <p class="text-[11px] text-slate-400">Toca un registro para reutilizarlo en la calculadora</p>
+                    <h2 class="text-base font-extrabold text-white">Historial • Divisas Venezuela</h2>
+                    <p class="text-[11px] text-slate-400">Toca un registro para cargarlo en la calculadora</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <button id="btnClearHistory" type="button" class="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 text-xs font-bold active:scale-95 transition">
@@ -334,13 +427,51 @@
         </div>
     </div>
 
-    <!-- Modal Guía Práctica PWA / Compilar APK Nativo -->
+    <!-- Modal 3: Guía de Instalación PWA / APK de "Divisas Venezuela" -->
     <div id="apkModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4">
         <div class="bg-mdCard border border-mdOutline rounded-3xl w-full max-w-md p-5 shadow-2xl flex flex-col gap-3">
             <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-extrabold text-xs">APK</span>
-                    <h3 class="text-base font-bold text-white">Instalar App o Compilar .APK</h3>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl overflow-hidden shadow-md shrink-0 bg-[#071324]">
+                        <svg viewBox="0 0 120 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="bgNavyM" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#0D2542"/>
+                                    <stop offset="100%" stop-color="#071324"/>
+                                </linearGradient>
+                                <linearGradient id="cyanFrameM" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#7DD3FC"/>
+                                    <stop offset="50%" stop-color="#0284C7"/>
+                                    <stop offset="100%" stop-color="#38BDF8"/>
+                                </linearGradient>
+                                <clipPath id="venMapClipM">
+                                    <path d="M31 53 L35 45 L41 44 L44 48 L51 46 L59 46 L68 47 L75 49 L83 51 L88 55 L83 61 L86 67 L79 73 L74 75 L69 83 L63 86 L58 81 L55 74 L49 71 L43 66 L36 62 L31 57 Z"/>
+                                </clipPath>
+                            </defs>
+                            <rect x="2" y="2" width="116" height="116" rx="26" fill="url(#bgNavyM)"/>
+                            <rect x="4" y="4" width="112" height="112" rx="24" fill="none" stroke="url(#cyanFrameM)" stroke-width="3"/>
+                            <rect x="8.5" y="8.5" width="103" height="103" rx="20" fill="none" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.55"/>
+                            <g clip-path="url(#venMapClipM)">
+                                <rect x="28" y="42" width="64" height="14" fill="#FACC15"/>
+                                <rect x="28" y="56" width="64" height="14" fill="#1D4ED8"/>
+                                <rect x="28" y="70" width="64" height="18" fill="#DC2626"/>
+                                <g fill="#FFFFFF">
+                                    <circle cx="48" cy="64.5" r="1.1"/><circle cx="51.2" cy="62.2" r="1.1"/>
+                                    <circle cx="55" cy="60.7" r="1.1"/><circle cx="59" cy="60.1" r="1.1"/>
+                                    <circle cx="63" cy="60.5" r="1.1"/><circle cx="66.8" cy="61.7" r="1.1"/>
+                                    <circle cx="70.2" cy="63.6" r="1.1"/><circle cx="73" cy="66" r="1.1"/>
+                                </g>
+                            </g>
+                            <text x="24" y="38" font-family="Arial, sans-serif" font-weight="900" font-size="27" fill="#FBBF24" text-anchor="middle">$</text>
+                            <text x="95" y="38" font-family="Arial, sans-serif" font-weight="900" font-size="26" fill="#10B981" text-anchor="middle">₮</text>
+                            <text x="28" y="103" font-family="Arial, sans-serif" font-weight="900" font-size="21" fill="#E2E8F0" stroke="#D97706" stroke-width="0.9" text-anchor="middle">R$</text>
+                            <text x="88" y="103" font-family="Arial, sans-serif" font-weight="900" font-size="16.5" fill="#D97706" text-anchor="middle">COL$</text>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-white leading-tight">Instalar Divisas Venezuela</h3>
+                        <p class="text-[10px] text-sky-400 font-semibold">Icono oficial PWA y APK nativo</p>
+                    </div>
                 </div>
                 <button id="btnCloseApkGuide" type="button" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
                     ✕
@@ -349,12 +480,12 @@
 
             <div class="text-xs text-slate-300 space-y-2.5 leading-relaxed">
                 <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3">
-                    <p class="font-bold text-emerald-400 mb-1">1. Instalar directamente como PWA en Android:</p>
-                    <p>Abre este archivo en <strong>Google Chrome</strong> en tu teléfono, pulsa el menú <strong>⋮</strong> y selecciona <strong>"Agregar a la pantalla principal"</strong> o <strong>"Instalar aplicación"</strong>. Se ejecutará a pantalla completa y funcionará sin conexión.</p>
+                    <p class="font-bold text-emerald-400 mb-1">1. Instalar como App en Android / iOS (PWA):</p>
+                    <p>Abre <strong>Divisas Venezuela</strong> en <strong>Google Chrome</strong>, pulsa el menú <strong>⋮</strong> y elige <strong>"Instalar aplicación"</strong> o <strong>"Agregar a la pantalla principal"</strong>. Funcionará a pantalla completa y sin conexión.</p>
                 </div>
                 <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3">
-                    <p class="font-bold text-sky-400 mb-1">2. Empaquetar como .APK nativo (Capacitor / Web2Apk):</p>
-                    <p>Coloca este archivo único <code class="text-amber-300">index.html</code> dentro de la carpeta <code class="text-amber-300">www/</code> de <strong>Capacitor</strong> (<code class="text-sky-300">npx cap add android</code>) o usa <strong>Web2Apk / Android Studio WebView</strong> para generar tu propio instalador <code class="text-amber-300">.apk</code> firmado.</p>
+                    <p class="font-bold text-sky-400 mb-1">2. Empaquetar como .APK nativo:</p>
+                    <p>Copia este archivo único <code class="text-amber-300">index.html</code> dentro de la carpeta <code class="text-amber-300">www/</code> de <strong>Capacitor</strong> (<code class="text-sky-300">npx cap add android</code>) o <strong>Android Studio WebView</strong> para compilar tu instalador <code class="text-amber-300">DivisasVenezuela.apk</code>.</p>
                 </div>
             </div>
 
@@ -364,18 +495,119 @@
         </div>
     </div>
 
-    <!-- Toast de Notificación Sutil (Sin alert() bloqueante) -->
-    <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-800/95 text-white border border-slate-600 px-4 py-2.5 rounded-2xl text-xs font-semibold shadow-2xl opacity-0 pointer-events-none transition-opacity duration-200 z-50 text-center max-w-[90vw]">
+    <!-- Toast de Notificación Sutil -->
+    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-800/95 text-white border border-slate-600 px-4 py-2 rounded-2xl text-xs font-semibold shadow-2xl opacity-0 pointer-events-none transition-opacity duration-200 z-50 text-center max-w-[90vw]">
         Copiado al portapapeles
     </div>
 
     <script>
-        /* Created by Csar Ramírez */
+        /* Created by César Ramírez León */
         (() => {
-            const STORAGE_RATES_KEY = 'csar_vzla_multicurrency_rates_v3';
-            const STORAGE_HISTORY_KEY = 'csar_vzla_multicurrency_history_v3';
+            // Configuración dinámica del Icono SVG Oficial (Favicon, Apple Touch Icon y Manifiesto PWA "Divisas Venezuela")
+            function setupAppIconAndManifest() {
+                const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+                    <defs>
+                        <linearGradient id="bgNavy" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0D2542"/>
+                            <stop offset="55%" stop-color="#091A30"/>
+                            <stop offset="100%" stop-color="#071324"/>
+                        </linearGradient>
+                        <linearGradient id="cyanFrame" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#7DD3FC"/>
+                            <stop offset="50%" stop-color="#0284C7"/>
+                            <stop offset="100%" stop-color="#38BDF8"/>
+                        </linearGradient>
+                        <linearGradient id="goldUsd" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#FDE047"/>
+                            <stop offset="50%" stop-color="#FBBF24"/>
+                            <stop offset="100%" stop-color="#D97706"/>
+                        </linearGradient>
+                        <linearGradient id="emeraldUsdt" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#34D399"/>
+                            <stop offset="55%" stop-color="#10B981"/>
+                            <stop offset="100%" stop-color="#059669"/>
+                        </linearGradient>
+                        <linearGradient id="silverBrl" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#F8FAFC"/>
+                            <stop offset="55%" stop-color="#CBD5E1"/>
+                            <stop offset="100%" stop-color="#94A3B8"/>
+                        </linearGradient>
+                        <linearGradient id="bronzeCop" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#F59E0B"/>
+                            <stop offset="50%" stop-color="#D97706"/>
+                            <stop offset="100%" stop-color="#92400E"/>
+                        </linearGradient>
+                        <clipPath id="venMapClip">
+                            <path d="M31 53 L35 45 L41 44 L44 48 L51 46 L59 46 L68 47 L75 49 L83 51 L88 55 L83 61 L86 67 L79 73 L74 75 L69 83 L63 86 L58 81 L55 74 L49 71 L43 66 L36 62 L31 57 Z"/>
+                        </clipPath>
+                    </defs>
+                    <rect x="2" y="2" width="116" height="116" rx="26" fill="url(#bgNavy)"/>
+                    <polyline points="12,86 30,72 44,80 66,58 82,66 108,42" fill="none" stroke="#38BDF8" stroke-width="1.3" stroke-opacity="0.22"/>
+                    <polyline points="12,72 28,60 46,68 72,44 90,52 108,30" fill="none" stroke="#FBBF24" stroke-width="1.1" stroke-opacity="0.18"/>
+                    <rect x="4" y="4" width="112" height="112" rx="24" fill="none" stroke="url(#cyanFrame)" stroke-width="3"/>
+                    <rect x="8.5" y="8.5" width="103" height="103" rx="20" fill="none" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.55"/>
+                    <g clip-path="url(#venMapClip)">
+                        <rect x="28" y="42" width="64" height="14" fill="#FACC15"/>
+                        <rect x="28" y="56" width="64" height="14" fill="#1D4ED8"/>
+                        <rect x="28" y="70" width="64" height="18" fill="#DC2626"/>
+                        <g fill="#FFFFFF">
+                            <circle cx="48" cy="64.5" r="1.1"/>
+                            <circle cx="51.2" cy="62.2" r="1.1"/>
+                            <circle cx="55" cy="60.7" r="1.1"/>
+                            <circle cx="59" cy="60.1" r="1.1"/>
+                            <circle cx="63" cy="60.5" r="1.1"/>
+                            <circle cx="66.8" cy="61.7" r="1.1"/>
+                            <circle cx="70.2" cy="63.6" r="1.1"/>
+                            <circle cx="73" cy="66" r="1.1"/>
+                        </g>
+                    </g>
+                    <path d="M31 53 L35 45 L41 44 L44 48 L51 46 L59 46 L68 47 L75 49 L83 51 L88 55 L83 61 L86 67 L79 73 L74 75 L69 83 L63 86 L58 81 L55 74 L49 71 L43 66 L36 62 L31 57 Z"
+                          fill="none" stroke="#FDE047" stroke-width="0.9" stroke-opacity="0.7"/>
+                    <text x="24" y="38" font-family="Arial, sans-serif" font-weight="900" font-size="27" fill="url(#goldUsd)" stroke="#78350F" stroke-width="0.7" text-anchor="middle">$</text>
+                    <text x="95" y="38" font-family="Arial, sans-serif" font-weight="900" font-size="26" fill="url(#emeraldUsdt)" stroke="#064E3B" stroke-width="0.7" text-anchor="middle">₮</text>
+                    <text x="28" y="103" font-family="Arial, sans-serif" font-weight="900" font-size="21" fill="url(#silverBrl)" stroke="#D97706" stroke-width="0.9" text-anchor="middle">R$</text>
+                    <text x="88" y="103" font-family="Arial, sans-serif" font-weight="900" font-size="16.5" fill="url(#bronzeCop)" stroke="#451A03" stroke-width="0.6" text-anchor="middle">COL$</text>
+                </svg>`;
 
-            // Respaldo offline exacto solicitado
+                const iconDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
+                const faviconEl = document.getElementById('appFavicon');
+                const touchIconEl = document.getElementById('appTouchIcon');
+                const manifestEl = document.getElementById('appManifest');
+
+                if (faviconEl) faviconEl.href = iconDataUrl;
+                if (touchIconEl) touchIconEl.href = iconDataUrl;
+
+                const manifestObj = {
+                    name: 'Divisas Venezuela',
+                    short_name: 'Divisas VE',
+                    description: 'Calculadora de divisas en tiempo real para Venezuela: Dólar BCV, USDT Binance, Real Brasileño (BRL), Peso Colombiano (COP) y Bolívares (VES).',
+                    start_url: './',
+                    display: 'standalone',
+                    orientation: 'portrait',
+                    background_color: '#071324',
+                    theme_color: '#071324',
+                    icons: [
+                        {
+                            src: iconDataUrl,
+                            sizes: '192x192 512x512',
+                            type: 'image/svg+xml',
+                            purpose: 'any maskable'
+                        }
+                    ]
+                };
+
+                if (manifestEl) {
+                    const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+                    manifestEl.href = URL.createObjectURL(manifestBlob);
+                }
+            }
+
+            setupAppIconAndManifest();
+
+            const STORAGE_RATES_KEY = 'divisas_venezuela_rates_v1';
+            const STORAGE_HISTORY_KEY = 'divisas_venezuela_history_v1';
+
+            // Respaldo offline por defecto
             const DEFAULT_RATES = {
                 bcv: 911.62,
                 usdt: 1064.04,
@@ -384,14 +616,13 @@
                 manualUsdToVes: 950.00
             };
 
-            // Metadatos de cada moneda soportada
             const CURRENCY_META = {
-                USD_BCV: { code: 'USD_BCV', short: 'USD BCV', symbol: '$', decimals: 2 },
-                USDT: { code: 'USDT', short: 'USDT', symbol: '₮', decimals: 2 },
-                VES: { code: 'VES', short: 'VES', symbol: 'Bs', decimals: 2 },
-                BRL: { code: 'BRL', short: 'BRL', symbol: 'R$', decimals: 2 },
-                COP: { code: 'COP', short: 'COP', symbol: '$', decimals: 2 },
-                USD_MANUAL: { code: 'USD_MANUAL', short: 'USD Manual', symbol: '$', decimals: 2 }
+                USD_BCV: { code: 'USD_BCV', short: 'USD BCV', symbol: '$' },
+                USDT: { code: 'USDT', short: 'USDT Binance', symbol: '₮' },
+                VES: { code: 'VES', short: 'VES', symbol: 'Bs' },
+                BRL: { code: 'BRL', short: 'BRL', symbol: 'R$' },
+                COP: { code: 'COP', short: 'COP', symbol: '$' },
+                USD_MANUAL: { code: 'USD_MANUAL', short: 'USD Manual', symbol: '$' }
             };
 
             let state = {
@@ -400,10 +631,10 @@
                 usdToBrl: DEFAULT_RATES.usdToBrl,
                 usdToCop: DEFAULT_RATES.usdToCop,
                 manualUsdToVes: DEFAULT_RATES.manualUsdToVes,
-                crossBase: 'bcv',      // 'bcv' o 'usdt' para valorar BRL y COP en Bolívares
+                crossBase: 'bcv',
                 fromCurrency: 'USD_BCV',
                 toCurrency: 'VES',
-                lastEdited: 'from',    // 'from' | 'to'
+                lastEdited: 'from',
                 lastUpdate: null
             };
 
@@ -421,9 +652,11 @@
                 cardCopUnitSub: document.getElementById('cardCopUnitSub'),
                 btnRefBcv: document.getElementById('btnRefBcv'),
                 btnRefUsdt: document.getElementById('btnRefUsdt'),
-                btnToggleManual: document.getElementById('btnToggleManual'),
-                manualPanel: document.getElementById('manualPanel'),
+                btnOpenManualModal: document.getElementById('btnOpenManualModal'),
+                manualModal: document.getElementById('manualModal'),
+                btnCloseManualModal: document.getElementById('btnCloseManualModal'),
                 manualRateInput: document.getElementById('manualRateInput'),
+                btnSaveManualOnly: document.getElementById('btnSaveManualOnly'),
                 btnUseManualCurrency: document.getElementById('btnUseManualCurrency'),
                 selectFrom: document.getElementById('selectFrom'),
                 selectTo: document.getElementById('selectTo'),
@@ -509,7 +742,6 @@
                 }
             }
 
-            // Convertir cualquier monto de una moneda a otra pasando por VES como pivote
             function convertAmount(amount, fromCode, toCode) {
                 if (!amount || isNaN(amount)) return 0;
                 if (fromCode === toCode) return amount;
@@ -549,17 +781,16 @@
                 } catch (e) {}
             }
 
-            // Sincronización en vivo con APIs públicas sin bloqueos
+            // Consulta de tasas en vivo desde las APIs oficiales con respaldo offline
             async function fetchLiveRates() {
                 els.refreshIcon.classList.add('animate-spin');
-                els.statusDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+                els.statusDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0';
                 els.statusText.textContent = 'Actualizando tasas...';
 
                 let okBcv = false;
                 let okUsdt = false;
                 let okFx = false;
 
-                // 1. Dólar Oficial BCV
                 try {
                     const resBcv = await fetch('https://ve.dolarapi.com/v1/dolares/oficial', { cache: 'no-store' });
                     if (resBcv.ok) {
@@ -571,7 +802,6 @@
                     }
                 } catch (e) {}
 
-                // 2. USDT Binance / Paralelo
                 try {
                     const resUsdt = await fetch('https://ve.dolarapi.com/v1/dolares/paralelo', { cache: 'no-store' });
                     if (resUsdt.ok) {
@@ -583,7 +813,6 @@
                     }
                 } catch (e) {}
 
-                // 3. Real Brasileño (BRL) y Peso Colombiano (COP) frente al USD
                 try {
                     const resFx = await fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' });
                     if (resFx.ok) {
@@ -605,18 +834,17 @@
                 if (okBcv || okUsdt || okFx) {
                     state.lastUpdate = timeStr;
                     saveRatesState();
-                    els.statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                    els.statusDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0';
                     els.statusText.textContent = `En vivo • ${timeStr}`;
                 } else {
-                    els.statusDot.className = 'w-2 h-2 rounded-full bg-sky-400';
-                    els.statusText.textContent = state.lastUpdate ? `Guardado • ${state.lastUpdate}` : 'Respaldo Offline activo';
+                    els.statusDot.className = 'w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0';
+                    els.statusText.textContent = state.lastUpdate ? `Offline • ${state.lastUpdate}` : 'Modo Offline';
                 }
 
                 els.refreshIcon.classList.remove('animate-spin');
                 renderAll();
             }
 
-            // Renderizar botones rápidos dinámicos según la moneda origen seleccionada
             function renderQuickButtons() {
                 const isCop = state.fromCurrency === 'COP';
                 const amounts = isCop
@@ -639,7 +867,7 @@
 
                 els.quickAmountsRow.innerHTML = amounts.map(item => `
                     <button type="button" data-quick-val="${item.val}"
-                        class="quick-btn py-2 rounded-xl bg-slate-800/85 hover:bg-slate-700 border border-slate-700/60 text-xs font-bold text-slate-200 active:scale-95 transition">
+                        class="quick-btn py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700/60 text-[11px] font-bold text-slate-200 active:scale-95 transition">
                         ${item.label}
                     </button>
                 `).join('');
@@ -655,31 +883,27 @@
                 });
             }
 
-            // Actualizar tarjetas superiores, selectores y conversión
             function renderAll() {
                 const vesPerBrl = getVesPerUnit('BRL');
                 const vesPerCop = getVesPerUnit('COP');
                 const vesPer1000Cop = vesPerCop * 1000;
 
-                // Tarjetas 2x2
                 els.cardBcvVal.textContent = `Bs ${formatNum(state.bcv, 2)}`;
                 els.cardUsdtVal.textContent = `Bs ${formatNum(state.usdt, 2)}`;
-                els.cardUsdBrlVal.textContent = `1$ = ${formatNum(state.usdToBrl, 2)} R$`;
+                els.cardUsdBrlVal.textContent = `1$=${formatNum(state.usdToBrl, 2)} R$`;
                 els.cardBrlVesVal.textContent = `Bs ${formatNum(vesPerBrl, 2)} / R$`;
-                els.cardUsdCopVal.textContent = `1$ = ${formatNum(state.usdToCop, 2)}`;
+                els.cardUsdCopVal.textContent = `1$=${formatNum(state.usdToCop, 2)}`;
                 els.cardCopVesVal.textContent = `Bs ${formatNum(vesPer1000Cop, 2)} / 1k`;
                 els.cardCopUnitSub.textContent = `1 COP = Bs ${formatNum(vesPerCop, 4)}`;
 
-                // Estado visual botones base BCV vs USDT
                 if (state.crossBase === 'bcv') {
-                    els.btnRefBcv.className = 'px-2.5 py-1 rounded-xl text-[11px] font-bold bg-sky-500 text-slate-950 transition';
-                    els.btnRefUsdt.className = 'px-2.5 py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition';
+                    els.btnRefBcv.className = 'px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-sky-500 text-slate-950 transition';
+                    els.btnRefUsdt.className = 'px-2 py-0.5 rounded-lg text-[10px] font-extrabold text-slate-400 hover:text-white transition';
                 } else {
-                    els.btnRefBcv.className = 'px-2.5 py-1 rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition';
-                    els.btnRefUsdt.className = 'px-2.5 py-1 rounded-xl text-[11px] font-bold bg-amber-400 text-slate-950 transition';
+                    els.btnRefBcv.className = 'px-2 py-0.5 rounded-lg text-[10px] font-extrabold text-slate-400 hover:text-white transition';
+                    els.btnRefUsdt.className = 'px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-amber-400 text-slate-950 transition';
                 }
 
-                // Resaltar tarjeta activa según moneda origen
                 document.querySelectorAll('.rate-card').forEach(card => {
                     const c = card.getAttribute('data-card-currency');
                     if (c === state.fromCurrency) {
@@ -691,13 +915,11 @@
                     }
                 });
 
-                // Sincronizar selects y símbolos
                 els.selectFrom.value = state.fromCurrency;
                 els.selectTo.value = state.toCurrency;
                 els.symbolFrom.textContent = CURRENCY_META[state.fromCurrency].symbol;
                 els.symbolTo.textContent = CURRENCY_META[state.toCurrency].symbol;
 
-                // Mostrar tasa unitaria legible entre origen y destino
                 const unitRate = convertAmount(1, state.fromCurrency, state.toCurrency);
                 const fromShort = CURRENCY_META[state.fromCurrency].short;
                 const toShort = CURRENCY_META[state.toCurrency].short;
@@ -712,7 +934,6 @@
                 recalculateConversion();
             }
 
-            // Recalcular valores bidireccionales y panel de equivalencias simultáneas
             function recalculateConversion() {
                 let fromAmount = 0;
                 let toAmount = 0;
@@ -739,7 +960,6 @@
                     }
                 }
 
-                // Equivalencias simultáneas en todas las monedas
                 const eqBcv = convertAmount(fromAmount, state.fromCurrency, 'USD_BCV');
                 const eqUsdt = convertAmount(fromAmount, state.fromCurrency, 'USDT');
                 const eqVes = convertAmount(fromAmount, state.fromCurrency, 'VES');
@@ -747,13 +967,12 @@
                 const eqCop = convertAmount(fromAmount, state.fromCurrency, 'COP');
 
                 els.eqUsdBcv.textContent = `$ ${formatNum(eqBcv, 2)}`;
-                els.eqUsdt.textContent = `${formatNum(eqUsdt, 2)} USDT`;
+                els.eqUsdt.textContent = `${formatNum(eqUsdt, 2)} ₮`;
                 els.eqVes.textContent = `Bs ${formatNum(eqVes, 2)}`;
                 els.eqBrl.textContent = `R$ ${formatNum(eqBrl, 2)}`;
                 els.eqCop.textContent = `$ ${formatNum(eqCop, 2)} COP`;
             }
 
-            // Guardar historial automático en localStorage
             let historyTimer = null;
             function scheduleHistorySave() {
                 clearTimeout(historyTimer);
@@ -842,7 +1061,6 @@
                     `;
                 }).join('');
 
-                // Permitir reutilizar un cálculo al tocarlo
                 els.historyList.querySelectorAll('.history-item-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
                         const idx = parseInt(btn.getAttribute('data-history-index'), 10);
@@ -860,7 +1078,7 @@
                 });
             }
 
-            // Generar desglose completo listo para WhatsApp
+            // Comprobante formateado para WhatsApp con encabezado oficial "Divisas Venezuela"
             function copyWhatsappBreakdown() {
                 const fromVal = parseFloat(els.inputFrom.value) || 0;
                 const toVal = parseFloat(els.inputTo.value) || 0;
@@ -874,7 +1092,7 @@
                 const eqCop = convertAmount(fromVal, state.fromCurrency, 'COP');
 
                 const text = [
-                    `💱 *Conversión de Divisas Venezuela*`,
+                    `💱 *Divisas Venezuela*`,
                     `• *Origen:* ${fMeta.symbol} ${formatNum(fromVal, 2)} (${fMeta.short})`,
                     `• *Resultado:* ${tMeta.symbol} ${formatNum(toVal, 2)} (${tMeta.short})`,
                     ``,
@@ -890,10 +1108,9 @@
                     `• 1 USD = ${formatNum(state.usdToBrl, 2)} R$ | ${formatNum(state.usdToCop, 2)} COP`
                 ].join('\n');
 
-                copyToClipboard(text, 'Desglose listo para pegar en WhatsApp');
+                copyToClipboard(text, 'Comprobante Divisas Venezuela copiado');
             }
 
-            // Eventos de Inputs y Selects
             els.inputFrom.addEventListener('input', () => {
                 state.lastEdited = 'from';
                 recalculateConversion();
@@ -918,7 +1135,6 @@
                 scheduleHistorySave();
             });
 
-            // Intercambio rápido (⇄)
             els.btnSwapCurrencies.addEventListener('click', () => {
                 const temp = state.fromCurrency;
                 state.fromCurrency = state.toCurrency;
@@ -928,7 +1144,6 @@
                 scheduleHistorySave();
             });
 
-            // Seleccionar moneda al tocar una de las 4 tarjetas superiores
             document.querySelectorAll('.rate-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const curr = card.getAttribute('data-card-currency');
@@ -944,7 +1159,6 @@
                 });
             });
 
-            // Cambiar referencia BCV / USDT para BRL y COP
             els.btnRefBcv.addEventListener('click', () => {
                 state.crossBase = 'bcv';
                 saveRatesState();
@@ -959,17 +1173,23 @@
                 showToast('BRL y COP calculados con USDT Binance');
             });
 
-            // Tasa manual
-            els.btnToggleManual.addEventListener('click', () => {
-                els.manualPanel.classList.toggle('hidden');
+            // Modal Tasa Manual
+            els.btnOpenManualModal.addEventListener('click', () => {
+                els.manualRateInput.value = state.manualUsdToVes;
+                els.manualModal.classList.remove('hidden');
             });
+            els.btnCloseManualModal.addEventListener('click', () => els.manualModal.classList.add('hidden'));
 
-            els.manualRateInput.addEventListener('input', () => {
+            els.btnSaveManualOnly.addEventListener('click', () => {
                 const val = parseFloat(els.manualRateInput.value);
                 if (val > 0) {
                     state.manualUsdToVes = val;
                     saveRatesState();
                     renderAll();
+                    els.manualModal.classList.add('hidden');
+                    showToast(`Tasa manual guardada: Bs ${formatNum(val, 2)}`);
+                } else {
+                    showToast('Ingresa un monto mayor a 0');
                 }
             });
 
@@ -981,11 +1201,12 @@
                 }
                 state.fromCurrency = 'USD_MANUAL';
                 state.toCurrency = 'VES';
+                state.lastEdited = 'from';
                 renderAll();
+                els.manualModal.classList.add('hidden');
                 showToast('Tasa manual aplicada');
             });
 
-            // Copiar montos y WhatsApp
             els.btnCopyFrom.addEventListener('click', () => {
                 if (els.inputFrom.value) copyToClipboard(els.inputFrom.value, 'Monto origen copiado');
             });
@@ -994,17 +1215,14 @@
             });
             els.btnCopyWhatsapp.addEventListener('click', copyWhatsappBreakdown);
 
-            // Limpiar campos
             els.btnClearInputs.addEventListener('click', () => {
                 els.inputFrom.value = '';
                 els.inputTo.value = '';
                 recalculateConversion();
             });
 
-            // Refrescar tasas
             els.btnRefresh.addEventListener('click', fetchLiveRates);
 
-            // Modales Historial y APK
             els.btnOpenHistory.addEventListener('click', () => {
                 renderHistoryModal();
                 els.historyModal.classList.remove('hidden');
@@ -1021,7 +1239,6 @@
             els.btnCloseApkGuide.addEventListener('click', () => els.apkModal.classList.add('hidden'));
             els.btnConfirmApkGuide.addEventListener('click', () => els.apkModal.classList.add('hidden'));
 
-            // Inicio inmediato sin ventanas emergentes ni solicitudes de permisos
             loadSavedState();
             updateHistoryBadge();
             renderAll();
