@@ -2,1248 +2,667 @@
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0B0F17">
-    <meta name="application-name" content="Divisas Venezuela">
-    <meta name="apple-mobile-web-app-title" content="Divisas Venezuela">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Divisas Venezuela</title>
-    <link id="appFavicon" rel="icon" type="image/svg+xml" href="">
-    <link id="appTouchIcon" rel="apple-touch-icon" href="">
-    <link id="appManifest" rel="manifest" href="">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                    colors: {
-                        mdSurface: '#0B0F17',
-                        mdCard: '#141B29',
-                        mdCardHover: '#1B2436',
-                        mdOutline: '#263147',
-                    }
-                }
-            }
-        };
-    </script>
-    <style>
-        * {
-            -webkit-tap-highlight-color: transparent;
-            box-sizing: border-box;
-        }
-        html, body {
-            height: 100dvh;
-            max-height: 100dvh;
-            overflow: hidden;
-            background-color: #0B0F17;
-            color: #F8FAFC;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-        select {
-            appearance: none;
-            -webkit-appearance: none;
-        }
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0B0F17;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #263147;
-            border-radius: 9999px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0B0F17" />
+  <title>Divisas Venezuela</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.FALLBACK_LOGO_URI = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <defs>
+          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0d2a52"/>
+            <stop offset="100%" stop-color="#050d1a"/>
+          </linearGradient>
+        </defs>
+        <rect width="512" height="512" rx="92" fill="url(#bg)"/>
+        <path d="M40 360 L140 280 L220 320 L340 200 L470 120" fill="none" stroke="#eab308" stroke-width="6" opacity="0.45"/>
+        <path d="M60 410 L170 330 L260 365 L390 245 L480 175" fill="none" stroke="#22c55e" stroke-width="6" opacity="0.45"/>
+        <text x="34" y="88" font-size="56" font-weight="900" fill="#d97706" stroke="#fde68a" stroke-width="2">COL$</text>
+        <text x="392" y="88" font-size="58" font-weight="900" fill="#e2e8f0" stroke="#eab308" stroke-width="2">R$</text>
+        <text x="148" y="340" font-size="270" font-weight="900" fill="#facc15" stroke="#92400e" stroke-width="8">$</text>
+        <text x="215" y="395" font-size="235" font-weight="900" fill="#22c55e" stroke="#064e3b" stroke-width="8">₮</text>
+        <path d="M365 405 L395 390 L435 395 L465 415 L445 455 L405 460 L375 435 Z" fill="#22d3ee"/>
+      </svg>
+    `);
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: #0B0F17;
+      color: #F8FAFC;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+  </style>
 </head>
-<body class="h-[100dvh] w-full flex flex-col justify-between bg-mdSurface text-slate-100 antialiased select-none">
+<body class="bg-[#0B0F17] text-slate-100 select-none">
+  <div id="app" class="w-full h-[100dvh] max-w-[460px] mx-auto px-3 py-2 flex flex-col justify-between overflow-hidden">
 
-    <!-- Contenedor Principal 9:16 Pantalla Única Sin Scroll -->
-    <div class="w-full max-w-md mx-auto h-full px-3 py-2 flex flex-col justify-between gap-1.5 overflow-hidden">
-
-        <!-- 1. Encabezado Oficial "Divisas Venezuela" con Icono SVG Personalizado -->
-        <header class="flex items-center justify-between bg-mdCard/95 border border-mdOutline rounded-2xl px-2.5 py-1.5 shadow-md shrink-0">
-            <div class="flex items-center gap-2 min-w-0">
-                <!-- Icono SVG Oficial: Doble borde cian brillante + Mapa tricolor Venezuela + $, ₮, R$, COL$ -->
-                <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg shrink-0 bg-[#071324]">
-                    <svg viewBox="0 0 120 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="bgNavy" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#0D2542"/>
-                                <stop offset="55%" stop-color="#091A30"/>
-                                <stop offset="100%" stop-color="#071324"/>
-                            </linearGradient>
-                            <linearGradient id="cyanFrame" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#7DD3FC"/>
-                                <stop offset="50%" stop-color="#0284C7"/>
-                                <stop offset="100%" stop-color="#38BDF8"/>
-                            </linearGradient>
-                            <linearGradient id="goldUsd" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#FDE047"/>
-                                <stop offset="50%" stop-color="#FBBF24"/>
-                                <stop offset="100%" stop-color="#D97706"/>
-                            </linearGradient>
-                            <linearGradient id="emeraldUsdt" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#34D399"/>
-                                <stop offset="55%" stop-color="#10B981"/>
-                                <stop offset="100%" stop-color="#059669"/>
-                            </linearGradient>
-                            <linearGradient id="silverBrl" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#F8FAFC"/>
-                                <stop offset="55%" stop-color="#CBD5E1"/>
-                                <stop offset="100%" stop-color="#94A3B8"/>
-                            </linearGradient>
-                            <linearGradient id="bronzeCop" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#F59E0B"/>
-                                <stop offset="50%" stop-color="#D97706"/>
-                                <stop offset="100%" stop-color="#92400E"/>
-                            </linearGradient>
-                            <clipPath id="venMapClip">
-                                <path d="M31 53 L35 45 L41 44 L44 48 L51 46 L59 46 L68 47 L75 49 L83 51 L88 55 L83 61 L86 67 L79 73 L74 75 L69 83 L63 86 L58 81 L55 74 L49 71 L43 66 L36 62 L31 57 Z"/>
-                            </clipPath>
-                            <filter id="dropShadow" x="-15%" y="-15%" width="130%" height="130%">
-                                <feDropShadow dx="0" dy="1.8" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.7"/>
-                            </filter>
-                        </defs>
-
-                        <!-- Fondo Azul Marino Profundo -->
-                        <rect x="2" y="2" width="116" height="116" rx="26" fill="url(#bgNavy)"/>
-
-                        <!-- Líneas de gráfica financiera sutiles -->
-                        <polyline points="12,86 30,72 44,80 66,58 82,66 108,42" fill="none" stroke="#38BDF8" stroke-width="1.3" stroke-opacity="0.22"/>
-                        <polyline points="12,72 28,60 46,68 72,44 90,52 108,30" fill="none" stroke="#FBBF24" stroke-width="1.1" stroke-opacity="0.18"/>
-
-                        <!-- Doble contorno azul cian brillante/iluminado -->
-                        <rect x="4" y="4" width="112" height="112" rx="24" fill="none" stroke="url(#cyanFrame)" stroke-width="3"/>
-                        <rect x="8.5" y="8.5" width="103" height="103" rx="20" fill="none" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.55"/>
-
-                        <!-- Mapa Central de Venezuela con Bandera Tricolor y 8 Estrellas -->
-                        <g filter="url(#dropShadow)">
-                            <g clip-path="url(#venMapClip)">
-                                <rect x="28" y="42" width="64" height="14" fill="#FACC15"/>
-                                <rect x="28" y="56" width="64" height="14" fill="#1D4ED8"/>
-                                <rect x="28" y="70" width="64" height="18" fill="#DC2626"/>
-                                <!-- Arco de 8 estrellas blancas -->
-                                <g fill="#FFFFFF">
-                                    <circle cx="48" cy="64.5" r="1.1"/>
-                                    <circle cx="51.2" cy="62.2" r="1.1"/>
-                                    <circle cx="55" cy="60.7" r="1.1"/>
-                                    <circle cx="59" cy="60.1" r="1.1"/>
-                                    <circle cx="63" cy="60.5" r="1.1"/>
-                                    <circle cx="66.8" cy="61.7" r="1.1"/>
-                                    <circle cx="70.2" cy="63.6" r="1.1"/>
-                                    <circle cx="73" cy="66" r="1.1"/>
-                                </g>
-                            </g>
-                            <path d="M31 53 L35 45 L41 44 L44 48 L51 46 L59 46 L68 47 L75 49 L83 51 L88 55 L83 61 L86 67 L79 73 L74 75 L69 83 L63 86 L58 81 L55 74 L49 71 L43 66 L36 62 L31 57 Z"
-                                  fill="none" stroke="#FDE047" stroke-width="0.9" stroke-opacity="0.7"/>
-                        </g>
-
-                        <!-- Esquina Superior Izquierda: Dólar ($) Dorado Metálico -->
-                        <text x="24" y="38" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="27" fill="url(#goldUsd)" stroke="#78350F" stroke-width="0.7" text-anchor="middle" filter="url(#dropShadow)">$</text>
-
-                        <!-- Esquina Superior Derecha: Tether USDT (₮) Verde Esmeralda -->
-                        <text x="95" y="38" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="26" fill="url(#emeraldUsdt)" stroke="#064E3B" stroke-width="0.7" text-anchor="middle" filter="url(#dropShadow)">₮</text>
-
-                        <!-- Esquina Inferior Izquierda: Real Brasileño (R$) Plateado con Borde Dorado -->
-                        <text x="28" y="103" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="21" fill="url(#silverBrl)" stroke="#D97706" stroke-width="0.9" text-anchor="middle" filter="url(#dropShadow)">R$</text>
-
-                        <!-- Esquina Inferior Derecha: Peso Colombiano (COL$) Bronce/Cobre Metálico -->
-                        <text x="88" y="103" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="16.5" fill="url(#bronzeCop)" stroke="#451A03" stroke-width="0.6" text-anchor="middle" filter="url(#dropShadow)">COL$</text>
-                    </svg>
-                </div>
-                <div class="min-w-0">
-                    <h1 class="text-xs sm:text-sm font-extrabold text-white leading-tight truncate tracking-tight">Divisas Venezuela</h1>
-                    <div class="flex items-center gap-1 mt-0.5">
-                        <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-                        <span id="statusText" class="text-[10px] text-slate-400 font-medium truncate">Sincronizando...</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-1 shrink-0">
-                <button id="btnRefresh" type="button" title="Actualizar tasas en vivo" class="p-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 transition text-sky-400 border border-slate-700/60">
-                    <svg id="refreshIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                </button>
-                <button id="btnOpenHistory" type="button" title="Historial de cálculos" class="p-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 transition text-amber-400 border border-slate-700/60 relative">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span id="historyBadge" class="hidden absolute -top-1 -right-1 bg-amber-500 text-slate-950 text-[8px] font-extrabold px-1 rounded-full">0</span>
-                </button>
-            </div>
-        </header>
-
-        <!-- 2. Cuadrícula 2x2 Compacta de Tasas en Vivo -->
-        <section class="grid grid-cols-2 gap-1.5 shrink-0">
-            <!-- Tarjeta 1: Dólar Oficial BCV -->
-            <button type="button" data-card-currency="USD_BCV" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border-2 border-sky-400 rounded-2xl px-2.5 py-2 transition active:scale-[0.98] shadow">
-                <div class="flex items-center justify-between gap-1">
-                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-sky-400 bg-sky-500/15 px-1.5 py-0.5 rounded-md">BCV Oficial</span>
-                    <span class="text-[9px] font-bold text-slate-400">USD $</span>
-                </div>
-                <div id="cardBcvVal" class="text-sm sm:text-base font-extrabold text-white tracking-tight mt-1 leading-none">Bs 911,62</div>
-                <div class="text-[9px] text-slate-400 mt-0.5 truncate">Banco Central</div>
-            </button>
-
-            <!-- Tarjeta 2: USDT Binance P2P -->
-            <button type="button" data-card-currency="USDT" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border border-mdOutline rounded-2xl px-2.5 py-2 transition active:scale-[0.98] shadow">
-                <div class="flex items-center justify-between gap-1">
-                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-500/15 px-1.5 py-0.5 rounded-md">USDT Binance</span>
-                    <span class="text-[9px] font-bold text-slate-400">P2P ₮</span>
-                </div>
-                <div id="cardUsdtVal" class="text-sm sm:text-base font-extrabold text-white tracking-tight mt-1 leading-none">Bs 1.064,04</div>
-                <div class="text-[9px] text-slate-400 mt-0.5 truncate">Referencia P2P</div>
-            </button>
-
-            <!-- Tarjeta 3: Real Brasileño (BRL - R$) -->
-            <button type="button" data-card-currency="BRL" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border border-mdOutline rounded-2xl px-2.5 py-2 transition active:scale-[0.98] shadow">
-                <div class="flex items-center justify-between gap-1">
-                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-emerald-400 bg-emerald-500/15 px-1.5 py-0.5 rounded-md">BRL R$</span>
-                    <span id="cardUsdBrlVal" class="text-[9px] font-bold text-emerald-300 truncate">1$=5,65 R$</span>
-                </div>
-                <div id="cardBrlVesVal" class="text-sm sm:text-base font-extrabold text-white tracking-tight mt-1 leading-none">Bs 161,35 / R$</div>
-                <div class="text-[9px] text-slate-400 mt-0.5 truncate">Real Brasileño</div>
-            </button>
-
-            <!-- Tarjeta 4: Peso Colombiano (COP - $) -->
-            <button type="button" data-card-currency="COP" class="rate-card text-left bg-mdCard hover:bg-mdCardHover border border-mdOutline rounded-2xl px-2.5 py-2 transition active:scale-[0.98] shadow">
-                <div class="flex items-center justify-between gap-1">
-                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-yellow-300 bg-yellow-400/15 px-1.5 py-0.5 rounded-md">COP $</span>
-                    <span id="cardUsdCopVal" class="text-[9px] font-bold text-yellow-200 truncate">1$=3.334,85</span>
-                </div>
-                <div id="cardCopVesVal" class="text-sm sm:text-base font-extrabold text-white tracking-tight mt-1 leading-none">Bs 273,36 / 1k</div>
-                <div id="cardCopUnitSub" class="text-[9px] text-slate-400 mt-0.5 truncate">1 COP = Bs 0,2734</div>
-            </button>
-        </section>
-
-        <!-- 3. Barra de Base Cruzada (BCV vs USDT) + Botón Modal Tasa Manual -->
-        <section class="bg-mdCard border border-mdOutline rounded-2xl px-2.5 py-1.5 flex items-center justify-between gap-1.5 shrink-0">
-            <div class="flex items-center gap-1.5">
-                <span class="text-[10px] text-slate-400 font-medium">Base BRL/COP:</span>
-                <div class="inline-flex bg-slate-900 border border-slate-800 rounded-xl p-0.5">
-                    <button id="btnRefBcv" type="button" class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-sky-500 text-slate-950 transition">BCV</button>
-                    <button id="btnRefUsdt" type="button" class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold text-slate-400 hover:text-white transition">USDT</button>
-                </div>
-            </div>
-            <button id="btnOpenManualModal" type="button" class="px-2.5 py-1 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/35 text-[10px] font-extrabold text-purple-300 active:scale-95 transition">
-                Tasa Manual
-            </button>
-        </section>
-
-        <!-- 4. Convertidor Bidireccional Multimoneda en Vivo -->
-        <main class="bg-mdCard border border-mdOutline rounded-2xl p-2.5 shadow-lg flex-1 min-h-0 flex flex-col justify-between gap-1.5">
-
-            <!-- Campo Moneda Origen -->
-            <div class="bg-slate-900/95 border border-slate-800 focus-within:border-sky-500/70 rounded-xl px-2.5 py-1.5 transition">
-                <div class="flex items-center justify-between gap-1.5 mb-1">
-                    <div class="relative flex-1 min-w-0">
-                        <select id="selectFrom" aria-label="Moneda de origen"
-                            class="w-full bg-slate-800/95 hover:bg-slate-800 border border-slate-700/80 text-[11px] font-bold text-sky-300 rounded-lg pl-2 pr-6 py-1 focus:outline-none focus:border-sky-400 cursor-pointer truncate">
-                            <option value="USD_BCV">🇺🇸 Dólar BCV (USD)</option>
-                            <option value="USDT">🪙 USDT Binance (USDT)</option>
-                            <option value="VES">🇻🇪 Bolívares (VES)</option>
-                            <option value="BRL">🇧🇷 Real Brasileño (BRL)</option>
-                            <option value="COP">🇨🇴 Peso Colombiano (COP)</option>
-                            <option value="USD_MANUAL">⚙️ Dólar Manual (USD)</option>
-                        </select>
-                        <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-[9px]">▼</span>
-                    </div>
-                    <button id="btnCopyFrom" type="button" class="text-[10px] font-bold text-slate-300 hover:text-white px-2 py-1 rounded-lg bg-slate-800/80 active:scale-95 transition shrink-0">
-                        Copiar
-                    </button>
-                </div>
-
-                <div class="flex items-center gap-1.5">
-                    <span id="symbolFrom" class="text-base font-extrabold text-slate-400 shrink-0">$</span>
-                    <input id="inputFrom" type="number" step="any" inputmode="decimal" placeholder="1.00" value="1"
-                        class="w-full bg-transparent text-xl font-extrabold text-white focus:outline-none leading-none">
-                    <button id="btnClearInputs" type="button" class="text-[10px] font-bold text-slate-400 hover:text-rose-400 px-1.5 py-0.5 rounded-lg bg-slate-800/70 shrink-0">
-                        Limpiar
-                    </button>
-                </div>
-            </div>
-
-            <!-- Fila Central: Tasa Directa + Botón Intercambio Rápido (⇄) -->
-            <div class="flex items-center justify-between px-1 shrink-0">
-                <span id="pairRateText" class="text-[10px] font-medium text-slate-400 truncate pr-2">
-                    1 USD BCV = <strong class="text-slate-200">911,62 VES</strong>
-                </span>
-                <button id="btnSwapCurrencies" type="button" title="Intercambiar monedas"
-                    class="w-7 h-7 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-sky-400 active:rotate-180 transition-transform duration-300 shrink-0 shadow">
-                    <span class="text-sm font-extrabold leading-none">⇄</span>
-                </button>
-            </div>
-
-            <!-- Campo Moneda Destino -->
-            <div class="bg-slate-900/95 border border-slate-800 focus-within:border-emerald-500/70 rounded-xl px-2.5 py-1.5 transition">
-                <div class="flex items-center justify-between gap-1.5 mb-1">
-                    <div class="relative flex-1 min-w-0">
-                        <select id="selectTo" aria-label="Moneda de destino"
-                            class="w-full bg-slate-800/95 hover:bg-slate-800 border border-slate-700/80 text-[11px] font-bold text-emerald-300 rounded-lg pl-2 pr-6 py-1 focus:outline-none focus:border-emerald-400 cursor-pointer truncate">
-                            <option value="VES" selected>🇻🇪 Bolívares (VES)</option>
-                            <option value="USD_BCV">🇺🇸 Dólar BCV (USD)</option>
-                            <option value="USDT">🪙 USDT Binance (USDT)</option>
-                            <option value="BRL">🇧🇷 Real Brasileño (BRL)</option>
-                            <option value="COP">🇨🇴 Peso Colombiano (COP)</option>
-                            <option value="USD_MANUAL">⚙️ Dólar Manual (USD)</option>
-                        </select>
-                        <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-[9px]">▼</span>
-                    </div>
-                    <button id="btnCopyTo" type="button" class="text-[10px] font-bold text-slate-300 hover:text-white px-2 py-1 rounded-lg bg-slate-800/80 active:scale-95 transition shrink-0">
-                        Copiar
-                    </button>
-                </div>
-
-                <div class="flex items-center gap-1.5">
-                    <span id="symbolTo" class="text-base font-extrabold text-slate-400 shrink-0">Bs</span>
-                    <input id="inputTo" type="number" step="any" inputmode="decimal" placeholder="0.00"
-                        class="w-full bg-transparent text-xl font-extrabold text-white focus:outline-none leading-none">
-                </div>
-            </div>
-
-            <!-- Chips de Montos Rápidos Dinámicos -->
-            <div id="quickAmountsRow" class="grid grid-cols-6 gap-1 shrink-0">
-                <!-- Generado dinámicamente -->
-            </div>
-
-            <!-- Panel Compacto de Equivalencias Simultáneas + Botón WhatsApp -->
-            <div class="bg-slate-950/75 border border-slate-800/90 rounded-xl px-2.5 py-1.5 shrink-0">
-                <div class="flex items-center justify-between mb-1">
-                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Equivalencias en Vivo</span>
-                    <button id="btnCopyWhatsapp" type="button" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 text-[10px] font-extrabold text-emerald-300 active:scale-95 transition">
-                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
-                        </svg>
-                        <span>WhatsApp</span>
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-3 gap-1 text-left">
-                    <div class="bg-slate-900/90 rounded-lg px-1.5 py-1 border border-slate-800/70">
-                        <span class="text-[8px] text-slate-400 block leading-none">USD BCV</span>
-                        <span id="eqUsdBcv" class="text-[10px] font-extrabold text-sky-300 truncate block mt-0.5">$ 1,00</span>
-                    </div>
-                    <div class="bg-slate-900/90 rounded-lg px-1.5 py-1 border border-slate-800/70">
-                        <span class="text-[8px] text-slate-400 block leading-none">USDT Binance</span>
-                        <span id="eqUsdt" class="text-[10px] font-extrabold text-amber-300 truncate block mt-0.5">0,86 ₮</span>
-                    </div>
-                    <div class="bg-slate-900/90 rounded-lg px-1.5 py-1 border border-slate-800/70">
-                        <span class="text-[8px] text-slate-400 block leading-none">Bolívares</span>
-                        <span id="eqVes" class="text-[10px] font-extrabold text-white truncate block mt-0.5">Bs 911,62</span>
-                    </div>
-                    <div class="bg-slate-900/90 rounded-lg px-1.5 py-1 border border-slate-800/70">
-                        <span class="text-[8px] text-slate-400 block leading-none">Real BRL</span>
-                        <span id="eqBrl" class="text-[10px] font-extrabold text-emerald-300 truncate block mt-0.5">R$ 5,65</span>
-                    </div>
-                    <div class="bg-slate-900/90 rounded-lg px-1.5 py-1 border border-slate-800/70 col-span-2">
-                        <span class="text-[8px] text-slate-400 block leading-none">Peso Colombiano</span>
-                        <span id="eqCop" class="text-[10px] font-extrabold text-yellow-300 truncate block mt-0.5">$ 3.334,85 COP</span>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- 5. Pie de Página Sutil con Atribución Exacta -->
-        <footer class="text-center shrink-0 py-0.5">
-            <p class="text-[10px] font-semibold text-slate-400 leading-none">
-                Divisas Venezuela • <span class="text-slate-300 font-bold">Created by César Ramírez León</span>
-            </p>
-        </footer>
-    </div>
-
-    <!-- Modal 1: Editor de Tasa Manual Personalizada -->
-    <div id="manualModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-mdCard border border-purple-500/40 rounded-3xl w-full max-w-sm p-5 shadow-2xl flex flex-col gap-3">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-base font-extrabold text-white">Tasa Manual Personalizada</h2>
-                    <p class="text-[11px] text-slate-400">Define tu tasa en Bolívares por 1 USD</p>
-                </div>
-                <button id="btnCloseManualModal" type="button" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center font-bold">
-                    ✕
-                </button>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3">
-                <label for="manualRateInput" class="text-[11px] font-bold text-purple-300 block mb-1.5">1 USD Manual equivale a (Bs):</label>
-                <input id="manualRateInput" type="number" step="any" inputmode="decimal" placeholder="950.00"
-                    class="w-full bg-slate-950 border border-purple-500/50 rounded-xl px-3 py-2.5 text-right text-xl font-extrabold text-white focus:outline-none focus:border-purple-400">
-            </div>
-
-            <div class="grid grid-cols-2 gap-2">
-                <button id="btnSaveManualOnly" type="button" class="py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition active:scale-95">
-                    Guardar Tasa
-                </button>
-                <button id="btnUseManualCurrency" type="button" class="py-2.5 rounded-2xl bg-purple-500 hover:bg-purple-400 text-slate-950 font-extrabold text-xs transition active:scale-95">
-                    Guardar y Usar
-                </button>
-            </div>
+    <!-- Encabezado -->
+    <header class="flex items-center justify-between gap-2 shrink-0">
+      <div class="flex items-center gap-2 min-w-0">
+        <img id="headerLogo" src="logo.jpg" alt="Logo Divisas Venezuela"
+          onerror="this.onerror=null; this.src=window.FALLBACK_LOGO_URI;"
+          class="w-9 h-9 rounded-xl border border-cyan-400/40 object-cover shrink-0 bg-[#07162B]" />
+        <div class="min-w-0">
+          <h1 class="text-sm font-bold tracking-tight text-white leading-tight truncate">Divisas Venezuela</h1>
+          <div id="statusBadge" class="flex items-center gap-1.5 text-[11px] text-emerald-400 leading-tight truncate">
+            <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+            <span id="statusText" class="truncate">Sincronizando...</span>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Modal 2: Historial Local Automático (localStorage) -->
-    <div id="historyModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4">
-        <div class="bg-mdCard border border-mdOutline rounded-3xl w-full max-w-md p-5 shadow-2xl flex flex-col gap-3 max-h-[85vh]">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-base font-extrabold text-white">Historial • Divisas Venezuela</h2>
-                    <p class="text-[11px] text-slate-400">Toca un registro para cargarlo en la calculadora</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button id="btnClearHistory" type="button" class="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 text-xs font-bold active:scale-95 transition">
-                        Limpiar
-                    </button>
-                    <button id="btnCloseHistory" type="button" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center font-bold">
-                        ✕
-                    </button>
-                </div>
-            </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button id="btnRefresh" type="button" title="Actualizar tasas"
+          class="w-8 h-8 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 flex items-center justify-center text-cyan-300 transition active:scale-95">
+          <svg id="refreshIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
+        <button id="btnHistory" type="button" title="Historial"
+          class="w-8 h-8 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 flex items-center justify-center text-amber-300 transition active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+      </div>
+    </header>
 
-            <div id="historyList" class="flex flex-col gap-2 overflow-y-auto pr-1 flex-1">
-                <!-- Elementos renderizados desde localStorage -->
-            </div>
+    <!-- Tarjetas de Tasas (2x2) -->
+    <section class="grid grid-cols-2 gap-1.5 shrink-0">
+      <div class="rounded-xl bg-[#121826] border border-cyan-500/25 px-2.5 py-1.5">
+        <div class="flex items-center justify-between text-[10px] font-semibold">
+          <span class="px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300">BCV OFICIAL</span>
+          <span class="text-slate-400">USD $</span>
         </div>
-    </div>
+        <div id="rateBcvDisplay" class="text-sm font-extrabold text-white mt-0.5 leading-tight">Bs 911,62</div>
+        <div class="text-[10px] text-slate-400 truncate">Banco Central</div>
+      </div>
 
-    <!-- Modal 3: Guía de Instalación PWA / APK de "Divisas Venezuela" -->
-    <div id="apkModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4">
-        <div class="bg-mdCard border border-mdOutline rounded-3xl w-full max-w-md p-5 shadow-2xl flex flex-col gap-3">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl overflow-hidden shadow-md shrink-0 bg-[#071324]">
-                        <svg viewBox="0 0 120 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <linearGradient id="bgNavyM" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#0D2542"/>
-                                    <stop offset="100%" stop-color="#071324"/>
-                                </linearGradient>
-                                <linearGradient id="cyanFrameM" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#7DD3FC"/>
-                                    <stop offset="50%" stop-color="#0284C7"/>
-                                    <stop offset="100%" stop-color="#38BDF8"/>
-                                </linearGradient>
-                                <clipPath id="venMapClipM">
-                                    <path d="M31 53 L35 45 L41 44 L44 48 L51 46 L59 46 L68 47 L75 49 L83 51 L88 55 L83 61 L86 67 L79 73 L74 75 L69 83 L63 86 L58 81 L55 74 L49 71 L43 66 L36 62 L31 57 Z"/>
-                                </clipPath>
-                            </defs>
-                            <rect x="2" y="2" width="116" height="116" rx="26" fill="url(#bgNavyM)"/>
-                            <rect x="4" y="4" width="112" height="112" rx="24" fill="none" stroke="url(#cyanFrameM)" stroke-width="3"/>
-                            <rect x="8.5" y="8.5" width="103" height="103" rx="20" fill="none" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.55"/>
-                            <g clip-path="url(#venMapClipM)">
-                                <rect x="28" y="42" width="64" height="14" fill="#FACC15"/>
-                                <rect x="28" y="56" width="64" height="14" fill="#1D4ED8"/>
-                                <rect x="28" y="70" width="64" height="18" fill="#DC2626"/>
-                                <g fill="#FFFFFF">
-                                    <circle cx="48" cy="64.5" r="1.1"/><circle cx="51.2" cy="62.2" r="1.1"/>
-                                    <circle cx="55" cy="60.7" r="1.1"/><circle cx="59" cy="60.1" r="1.1"/>
-                                    <circle cx="63" cy="60.5" r="1.1"/><circle cx="66.8" cy="61.7" r="1.1"/>
-                                    <circle cx="70.2" cy="63.6" r="1.1"/><circle cx="73" cy="66" r="1.1"/>
-                                </g>
-                            </g>
-                            <text x="24" y="38" font-family="Arial, sans-serif" font-weight="900" font-size="27" fill="#FBBF24" text-anchor="middle">$</text>
-                            <text x="95" y="38" font-family="Arial, sans-serif" font-weight="900" font-size="26" fill="#10B981" text-anchor="middle">₮</text>
-                            <text x="28" y="103" font-family="Arial, sans-serif" font-weight="900" font-size="21" fill="#E2E8F0" stroke="#D97706" stroke-width="0.9" text-anchor="middle">R$</text>
-                            <text x="88" y="103" font-family="Arial, sans-serif" font-weight="900" font-size="16.5" fill="#D97706" text-anchor="middle">COL$</text>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-extrabold text-white leading-tight">Instalar Divisas Venezuela</h3>
-                        <p class="text-[10px] text-sky-400 font-semibold">Icono oficial PWA y APK nativo</p>
-                    </div>
-                </div>
-                <button id="btnCloseApkGuide" type="button" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
-                    ✕
-                </button>
-            </div>
-
-            <div class="text-xs text-slate-300 space-y-2.5 leading-relaxed">
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3">
-                    <p class="font-bold text-emerald-400 mb-1">1. Instalar como App en Android / iOS (PWA):</p>
-                    <p>Abre <strong>Divisas Venezuela</strong> en <strong>Google Chrome</strong>, pulsa el menú <strong>⋮</strong> y elige <strong>"Instalar aplicación"</strong> o <strong>"Agregar a la pantalla principal"</strong>. Funcionará a pantalla completa y sin conexión.</p>
-                </div>
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3">
-                    <p class="font-bold text-sky-400 mb-1">2. Empaquetar como .APK nativo:</p>
-                    <p>Copia este archivo único <code class="text-amber-300">index.html</code> dentro de la carpeta <code class="text-amber-300">www/</code> de <strong>Capacitor</strong> (<code class="text-sky-300">npx cap add android</code>) o <strong>Android Studio WebView</strong> para compilar tu instalador <code class="text-amber-300">DivisasVenezuela.apk</code>.</p>
-                </div>
-            </div>
-
-            <button id="btnConfirmApkGuide" type="button" class="w-full py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs tracking-wide transition active:scale-[0.99]">
-                Entendido
-            </button>
+      <div class="rounded-xl bg-[#121826] border border-emerald-500/25 px-2.5 py-1.5">
+        <div class="flex items-center justify-between text-[10px] font-semibold">
+          <span class="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300">USDT BINANCE</span>
+          <span class="text-slate-400">P2P ₮</span>
         </div>
+        <div id="rateUsdtDisplay" class="text-sm font-extrabold text-white mt-0.5 leading-tight">Bs 1.048,60</div>
+        <div class="text-[10px] text-slate-400 truncate">Referencia P2P</div>
+      </div>
+
+      <div class="rounded-xl bg-[#121826] border border-slate-700/60 px-2.5 py-1.5">
+        <div class="flex items-center justify-between text-[10px] font-semibold">
+          <span class="px-1.5 py-0.5 rounded bg-slate-700/70 text-slate-200">BRL R$</span>
+          <span id="brlCrossDisplay" class="text-slate-400">1$=5,65 R$</span>
+        </div>
+        <div id="rateBrlDisplay" class="text-sm font-extrabold text-white mt-0.5 leading-tight">Bs 161,40 / R$</div>
+        <div class="text-[10px] text-slate-400 truncate">Real Brasileño</div>
+      </div>
+
+      <div class="rounded-xl bg-[#121826] border border-slate-700/60 px-2.5 py-1.5">
+        <div class="flex items-center justify-between text-[10px] font-semibold">
+          <span class="px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300">COP $</span>
+          <span id="copCrossDisplay" class="text-slate-400">1$=3.286,10</span>
+        </div>
+        <div id="rateCopDisplay" class="text-sm font-extrabold text-white mt-0.5 leading-tight">Bs 277,42 / 1k</div>
+        <div id="copUnitDisplay" class="text-[10px] text-slate-400 truncate">1 COP = Bs 0,2774</div>
+      </div>
+    </section>
+
+    <!-- Selector de Base y Tasa Manual -->
+    <section class="flex items-center justify-between gap-2 shrink-0">
+      <div class="flex items-center gap-1.5 text-[11px]">
+        <span class="text-slate-400">Base BRL/COP:</span>
+        <button id="btnBaseBcv" type="button"
+          class="px-2 py-0.5 rounded-md font-bold bg-cyan-500 text-slate-950 transition">BCV</button>
+        <button id="btnBaseUsdt" type="button"
+          class="px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-300 border border-slate-700 transition">USDT</button>
+      </div>
+
+      <button id="btnManualToggle" type="button"
+        class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 transition">
+        Tasa Manual
+      </button>
+    </section>
+
+    <!-- Panel Tasa Manual (oculto por defecto) -->
+    <section id="manualPanel" class="hidden rounded-xl bg-[#151C2C] border border-purple-500/30 p-2 shrink-0">
+      <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+        <label class="flex flex-col gap-0.5">
+          <span class="text-slate-400 text-[10px]">BCV (Bs/$)</span>
+          <input id="manualBcvInput" type="number" step="0.01" class="rounded bg-slate-900 border border-slate-700 px-2 py-1 text-white text-xs" />
+        </label>
+        <label class="flex flex-col gap-0.5">
+          <span class="text-slate-400 text-[10px]">USDT (Bs/₮)</span>
+          <input id="manualUsdtInput" type="number" step="0.01" class="rounded bg-slate-900 border border-slate-700 px-2 py-1 text-white text-xs" />
+        </label>
+      </div>
+      <div class="flex justify-end gap-1.5 mt-1.5">
+        <button id="btnManualApply" type="button" class="px-2.5 py-0.5 rounded bg-purple-500 text-white text-[11px] font-semibold">Aplicar</button>
+      </div>
+    </section>
+
+    <!-- Convertidor Bidireccional -->
+    <section class="rounded-xl bg-[#121826] border border-slate-800 p-2.5 flex flex-col gap-1.5 shrink-0">
+      <!-- Origen -->
+      <div class="flex items-center justify-between gap-2">
+        <select id="fromCurrency" class="rounded-lg bg-slate-800/90 border border-slate-700 px-2 py-1 text-xs font-semibold text-white outline-none">
+          <option value="USD">🇺🇸 Dólar BCV (USD)</option>
+          <option value="USDT">🟢 USDT Binance</option>
+          <option value="VES">🇻🇪 Bolívares (VES)</option>
+          <option value="BRL">🇧🇷 Real Brasileño (BRL)</option>
+          <option value="COP">🇨🇴 Peso Colombiano (COP)</option>
+        </select>
+        <button id="btnCopyFrom" type="button" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-200 border border-slate-700">Copiar</button>
+      </div>
+
+      <div class="flex items-center justify-between gap-2">
+        <span id="fromSymbol" class="text-base font-bold text-slate-400">$</span>
+        <input id="fromAmount" type="number" step="any" value="1"
+          class="w-full bg-transparent text-xl font-extrabold text-white outline-none text-left px-1" />
+        <button id="btnClear" type="button" class="px-2 py-0.5 rounded bg-slate-800/80 text-[11px] text-slate-400 hover:text-white">Limpiar</button>
+      </div>
+
+      <!-- Equivalencia y Swap -->
+      <div class="flex items-center justify-between py-0.5 border-y border-slate-800/80 text-[11px] text-slate-400">
+        <span id="rateSummaryText">1 USD = 911,62 VES</span>
+        <button id="btnSwap" type="button" title="Invertir monedas"
+          class="w-7 h-7 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 flex items-center justify-center transition active:scale-95">
+          ⇄
+        </button>
+      </div>
+
+      <!-- Destino -->
+      <div class="flex items-center justify-between gap-2">
+        <select id="toCurrency" class="rounded-lg bg-slate-800/90 border border-slate-700 px-2 py-1 text-xs font-semibold text-white outline-none">
+          <option value="VES" selected>🇻🇪 Bolívares (VES)</option>
+          <option value="USD">🇺🇸 Dólar BCV (USD)</option>
+          <option value="USDT">🟢 USDT Binance</option>
+          <option value="BRL">🇧🇷 Real Brasileño (BRL)</option>
+          <option value="COP">🇨🇴 Peso Colombiano (COP)</option>
+        </select>
+        <button id="btnCopyTo" type="button" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-200 border border-slate-700">Copiar</button>
+      </div>
+
+      <div class="flex items-baseline gap-1.5">
+        <span id="toSymbol" class="text-base font-bold text-slate-400">Bs</span>
+        <div id="toAmount" class="text-xl font-extrabold text-white truncate">911,62</div>
+      </div>
+    </section>
+
+    <!-- Montos Rápidos -->
+    <section class="grid grid-cols-6 gap-1.5 shrink-0">
+      <button type="button" data-quick="1" class="quick-btn py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 text-xs font-bold text-slate-200">1</button>
+      <button type="button" data-quick="5" class="quick-btn py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 text-xs font-bold text-slate-200">5</button>
+      <button type="button" data-quick="10" class="quick-btn py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 text-xs font-bold text-slate-200">10</button>
+      <button type="button" data-quick="20" class="quick-btn py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 text-xs font-bold text-slate-200">20</button>
+      <button type="button" data-quick="50" class="quick-btn py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 text-xs font-bold text-slate-200">50</button>
+      <button type="button" data-quick="100" class="quick-btn py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 text-xs font-bold text-slate-200">100</button>
+    </section>
+
+    <!-- Equivalencias en Vivo y Acción -->
+    <section class="rounded-xl bg-[#121826] border border-slate-800 p-2 flex flex-col gap-1.5 shrink-0">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Equivalencias en vivo</span>
+        <div class="flex items-center gap-1.5">
+          <button id="btnSaveHistory" type="button" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-[11px] font-semibold text-cyan-300 border border-slate-700">Guardar</button>
+          <button id="btnShareWhatsapp" type="button" class="px-2 py-0.5 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 text-[11px] font-semibold text-emerald-300 border border-emerald-500/30">WhatsApp</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-1.5 text-center">
+        <div class="rounded-lg bg-slate-900/90 px-1.5 py-1 border border-slate-800">
+          <div class="text-[10px] text-slate-400">USD BCV</div>
+          <div id="eqUsd" class="text-xs font-bold text-cyan-300 truncate">$ 1,00</div>
+        </div>
+        <div class="rounded-lg bg-slate-900/90 px-1.5 py-1 border border-slate-800">
+          <div class="text-[10px] text-slate-400">USDT Binance</div>
+          <div id="eqUsdt" class="text-xs font-bold text-amber-300 truncate">0,87 ₮</div>
+        </div>
+        <div class="rounded-lg bg-slate-900/90 px-1.5 py-1 border border-slate-800">
+          <div class="text-[10px] text-slate-400">Bolívares</div>
+          <div id="eqVes" class="text-xs font-bold text-white truncate">Bs 911,62</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-1.5 text-center">
+        <div class="rounded-lg bg-slate-900/90 px-1.5 py-1 border border-slate-800">
+          <div class="text-[10px] text-slate-400">Real BRL</div>
+          <div id="eqBrl" class="text-xs font-bold text-emerald-300 truncate">R$ 5,65</div>
+        </div>
+        <div class="rounded-lg bg-slate-900/90 px-1.5 py-1 border border-slate-800">
+          <div class="text-[10px] text-slate-400">Peso Colombiano</div>
+          <div id="eqCop" class="text-xs font-bold text-amber-300 truncate">$ 3.286,10 COP</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pie de página -->
+    <footer class="text-center text-[10px] text-slate-500 shrink-0 leading-tight">
+      Divisas Venezuela • Created by César Ramírez León
+    </footer>
+  </div>
+
+  <!-- Modal Historial -->
+  <div id="historyModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="w-full max-w-md max-h-[80dvh] rounded-2xl bg-[#121826] border border-slate-700 p-4 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-bold text-white">Historial de conversiones</h2>
+        <div class="flex items-center gap-2">
+          <button id="btnClearHistory" type="button" class="text-xs text-rose-400 hover:text-rose-300">Borrar</button>
+          <button id="btnCloseHistory" type="button" class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-200">Cerrar</button>
+        </div>
+      </div>
+      <div id="historyList" class="overflow-y-auto flex flex-col gap-2 text-xs"></div>
     </div>
-
-    <!-- Toast de Notificación Sutil -->
-    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-800/95 text-white border border-slate-600 px-4 py-2 rounded-2xl text-xs font-semibold shadow-2xl opacity-0 pointer-events-none transition-opacity duration-200 z-50 text-center max-w-[90vw]">
-        Copiado al portapapeles
-    </div>
-
-    <script>
-        /* Created by César Ramírez León */
-        (() => {
-            // Configuración dinámica del Icono SVG Oficial (Favicon, Apple Touch Icon y Manifiesto PWA "Divisas Venezuela")
-            function setupAppIconAndManifest() {
-                const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-                    <defs>
-                        <linearGradient id="bgNavy" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#0D2542"/>
-                            <stop offset="55%" stop-color="#091A30"/>
-                            <stop offset="100%" stop-color="#071324"/>
-                        </linearGradient>
-                        <linearGradient id="cyanFrame" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#7DD3FC"/>
-                            <stop offset="50%" stop-color="#0284C7"/>
-                            <stop offset="100%" stop-color="#38BDF8"/>
-                        </linearGradient>
-                        <linearGradient id="goldUsd" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#FDE047"/>
-                            <stop offset="50%" stop-color="#FBBF24"/>
-                            <stop offset="100%" stop-color="#D97706"/>
-                        </linearGradient>
-                        <linearGradient id="emeraldUsdt" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#34D399"/>
-                            <stop offset="55%" stop-color="#10B981"/>
-                            <stop offset="100%" stop-color="#059669"/>
-                        </linearGradient>
-                        <linearGradient id="silverBrl" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#F8FAFC"/>
-                            <stop offset="55%" stop-color="#CBD5E1"/>
-                            <stop offset="100%" stop-color="#94A3B8"/>
-                        </linearGradient>
-                        <linearGradient id="bronzeCop" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#F59E0B"/>
-                            <stop offset="50%" stop-color="#D97706"/>
-                            <stop offset="100%" stop-color="#92400E"/>
-                        </linearGradient>
-                        <clipPath id="venMapClip">
-                            <path d="M31 53 L35 45 L41 44 L44 48 L51 46 L59 46 L68 47 L75 49 L83 51 L88 55 L83 61 L86 67 L79 73 L74 75 L69 83 L63 86 L58 81 L55 74 L49 71 L43 66 L36 62 L31 57 Z"/>
-                        </clipPath>
-                    </defs>
-                    <rect x="2" y="2" width="116" height="116" rx="26" fill="url(#bgNavy)"/>
-                    <polyline points="12,86 30,72 44,80 66,58 82,66 108,42" fill="none" stroke="#38BDF8" stroke-width="1.3" stroke-opacity="0.22"/>
-                    <polyline points="12,72 28,60 46,68 72,44 90,52 108,30" fill="none" stroke="#FBBF24" stroke-width="1.1" stroke-opacity="0.18"/>
-                    <rect x="4" y="4" width="112" height="112" rx="24" fill="none" stroke="url(#cyanFrame)" stroke-width="3"/>
-                    <rect x="8.5" y="8.5" width="103" height="103" rx="20" fill="none" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.55"/>
-                    <g clip-path="url(#venMapClip)">
-                        <rect x="28" y="42" width="64" height="14" fill="#FACC15"/>
-                        <rect x="28" y="56" width="64" height="14" fill="#1D4ED8"/>
-                        <rect x="28" y="70" width="64" height="18" fill="#DC2626"/>
-                        <g fill="#FFFFFF">
-                            <circle cx="48" cy="64.5" r="1.1"/>
-                            <circle cx="51.2" cy="62.2" r="1.1"/>
-                            <circle cx="55" cy="60.7" r="1.1"/>
-                            <circle cx="59" cy="60.1" r="1.1"/>
-                            <circle cx="63" cy="60.5" r="1.1"/>
-                            <circle cx="66.8" cy="61.7" r="1.1"/>
-                            <circle cx="70.2" cy="63.6" r="1.1"/>
-                            <circle cx="73" cy="66" r="1.1"/>
-                        </g>
-                    </g>
-                    <path d="M31 53 L35 45 L41 44 L44 48 L51 46 L59 46 L68 47 L75 49 L83 51 L88 55 L83 61 L86 67 L79 73 L74 75 L69 83 L63 86 L58 81 L55 74 L49 71 L43 66 L36 62 L31 57 Z"
-                          fill="none" stroke="#FDE047" stroke-width="0.9" stroke-opacity="0.7"/>
-                    <text x="24" y="38" font-family="Arial, sans-serif" font-weight="900" font-size="27" fill="url(#goldUsd)" stroke="#78350F" stroke-width="0.7" text-anchor="middle">$</text>
-                    <text x="95" y="38" font-family="Arial, sans-serif" font-weight="900" font-size="26" fill="url(#emeraldUsdt)" stroke="#064E3B" stroke-width="0.7" text-anchor="middle">₮</text>
-                    <text x="28" y="103" font-family="Arial, sans-serif" font-weight="900" font-size="21" fill="url(#silverBrl)" stroke="#D97706" stroke-width="0.9" text-anchor="middle">R$</text>
-                    <text x="88" y="103" font-family="Arial, sans-serif" font-weight="900" font-size="16.5" fill="url(#bronzeCop)" stroke="#451A03" stroke-width="0.6" text-anchor="middle">COL$</text>
-                </svg>`;
-
-                const iconDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
-                const faviconEl = document.getElementById('appFavicon');
-                const touchIconEl = document.getElementById('appTouchIcon');
-                const manifestEl = document.getElementById('appManifest');
-
-                if (faviconEl) faviconEl.href = iconDataUrl;
-                if (touchIconEl) touchIconEl.href = iconDataUrl;
-
-                const manifestObj = {
-                    name: 'Divisas Venezuela',
-                    short_name: 'Divisas VE',
-                    description: 'Calculadora de divisas en tiempo real para Venezuela: Dólar BCV, USDT Binance, Real Brasileño (BRL), Peso Colombiano (COP) y Bolívares (VES).',
-                    start_url: './',
-                    display: 'standalone',
-                    orientation: 'portrait',
-                    background_color: '#071324',
-                    theme_color: '#071324',
-                    icons: [
-                        {
-                            src: iconDataUrl,
-                            sizes: '192x192 512x512',
-                            type: 'image/svg+xml',
-                            purpose: 'any maskable'
-                        }
-                    ]
-                };
-
-                if (manifestEl) {
-                    const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
-                    manifestEl.href = URL.createObjectURL(manifestBlob);
-                }
-            }
-
-            setupAppIconAndManifest();
-
-            const STORAGE_RATES_KEY = 'divisas_venezuela_rates_v1';
-            const STORAGE_HISTORY_KEY = 'divisas_venezuela_history_v1';
-
-            // Respaldo offline por defecto
-            const DEFAULT_RATES = {
-                bcv: 911.62,
-                usdt: 1064.04,
-                usdToBrl: 5.65,
-                usdToCop: 3334.85,
-                manualUsdToVes: 950.00
-            };
-
-            const CURRENCY_META = {
-                USD_BCV: { code: 'USD_BCV', short: 'USD BCV', symbol: '$' },
-                USDT: { code: 'USDT', short: 'USDT Binance', symbol: '₮' },
-                VES: { code: 'VES', short: 'VES', symbol: 'Bs' },
-                BRL: { code: 'BRL', short: 'BRL', symbol: 'R$' },
-                COP: { code: 'COP', short: 'COP', symbol: '$' },
-                USD_MANUAL: { code: 'USD_MANUAL', short: 'USD Manual', symbol: '$' }
-            };
-
-            let state = {
-                bcv: DEFAULT_RATES.bcv,
-                usdt: DEFAULT_RATES.usdt,
-                usdToBrl: DEFAULT_RATES.usdToBrl,
-                usdToCop: DEFAULT_RATES.usdToCop,
-                manualUsdToVes: DEFAULT_RATES.manualUsdToVes,
-                crossBase: 'bcv',
-                fromCurrency: 'USD_BCV',
-                toCurrency: 'VES',
-                lastEdited: 'from',
-                lastUpdate: null
-            };
-
-            const els = {
-                statusDot: document.getElementById('statusDot'),
-                statusText: document.getElementById('statusText'),
-                btnRefresh: document.getElementById('btnRefresh'),
-                refreshIcon: document.getElementById('refreshIcon'),
-                cardBcvVal: document.getElementById('cardBcvVal'),
-                cardUsdtVal: document.getElementById('cardUsdtVal'),
-                cardUsdBrlVal: document.getElementById('cardUsdBrlVal'),
-                cardBrlVesVal: document.getElementById('cardBrlVesVal'),
-                cardUsdCopVal: document.getElementById('cardUsdCopVal'),
-                cardCopVesVal: document.getElementById('cardCopVesVal'),
-                cardCopUnitSub: document.getElementById('cardCopUnitSub'),
-                btnRefBcv: document.getElementById('btnRefBcv'),
-                btnRefUsdt: document.getElementById('btnRefUsdt'),
-                btnOpenManualModal: document.getElementById('btnOpenManualModal'),
-                manualModal: document.getElementById('manualModal'),
-                btnCloseManualModal: document.getElementById('btnCloseManualModal'),
-                manualRateInput: document.getElementById('manualRateInput'),
-                btnSaveManualOnly: document.getElementById('btnSaveManualOnly'),
-                btnUseManualCurrency: document.getElementById('btnUseManualCurrency'),
-                selectFrom: document.getElementById('selectFrom'),
-                selectTo: document.getElementById('selectTo'),
-                symbolFrom: document.getElementById('symbolFrom'),
-                symbolTo: document.getElementById('symbolTo'),
-                inputFrom: document.getElementById('inputFrom'),
-                inputTo: document.getElementById('inputTo'),
-                pairRateText: document.getElementById('pairRateText'),
-                btnSwapCurrencies: document.getElementById('btnSwapCurrencies'),
-                btnClearInputs: document.getElementById('btnClearInputs'),
-                btnCopyFrom: document.getElementById('btnCopyFrom'),
-                btnCopyTo: document.getElementById('btnCopyTo'),
-                quickAmountsRow: document.getElementById('quickAmountsRow'),
-                btnCopyWhatsapp: document.getElementById('btnCopyWhatsapp'),
-                eqUsdBcv: document.getElementById('eqUsdBcv'),
-                eqUsdt: document.getElementById('eqUsdt'),
-                eqVes: document.getElementById('eqVes'),
-                eqBrl: document.getElementById('eqBrl'),
-                eqCop: document.getElementById('eqCop'),
-                historyModal: document.getElementById('historyModal'),
-                btnOpenHistory: document.getElementById('btnOpenHistory'),
-                btnCloseHistory: document.getElementById('btnCloseHistory'),
-                btnClearHistory: document.getElementById('btnClearHistory'),
-                historyList: document.getElementById('historyList'),
-                historyBadge: document.getElementById('historyBadge'),
-                apkModal: document.getElementById('apkModal'),
-                btnOpenApkGuide: document.getElementById('btnOpenApkGuide'),
-                btnCloseApkGuide: document.getElementById('btnCloseApkGuide'),
-                btnConfirmApkGuide: document.getElementById('btnConfirmApkGuide'),
-                toast: document.getElementById('toast')
-            };
-
-            function formatNum(num, decimals = 2) {
-                if (isNaN(num) || !isFinite(num)) return '0,00';
-                return num.toLocaleString('es-VE', {
-                    minimumFractionDigits: decimals,
-                    maximumFractionDigits: decimals
-                });
-            }
-
-            let toastTimer = null;
-            function showToast(msg) {
-                els.toast.textContent = msg;
-                els.toast.classList.remove('opacity-0');
-                clearTimeout(toastTimer);
-                toastTimer = setTimeout(() => {
-                    els.toast.classList.add('opacity-0');
-                }, 2200);
-            }
-
-            function copyToClipboard(text, successMsg) {
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                document.body.appendChild(textarea);
-                textarea.select();
-                try {
-                    document.execCommand('copy');
-                    showToast(successMsg);
-                } catch (err) {
-                    showToast('No se pudo copiar al portapapeles');
-                }
-                document.body.removeChild(textarea);
-            }
-
-            // Valor en Bolívares (VES) de 1 unidad de cada moneda
-            function getVesPerUnit(currencyCode) {
-                const baseUsdInVes = state.crossBase === 'usdt' ? state.usdt : state.bcv;
-                switch (currencyCode) {
-                    case 'VES':
-                        return 1;
-                    case 'USD_BCV':
-                        return state.bcv;
-                    case 'USDT':
-                        return state.usdt;
-                    case 'BRL':
-                        return state.usdToBrl > 0 ? (baseUsdInVes / state.usdToBrl) : (baseUsdInVes / DEFAULT_RATES.usdToBrl);
-                    case 'COP':
-                        return state.usdToCop > 0 ? (baseUsdInVes / state.usdToCop) : (baseUsdInVes / DEFAULT_RATES.usdToCop);
-                    case 'USD_MANUAL':
-                        return state.manualUsdToVes > 0 ? state.manualUsdToVes : state.bcv;
-                    default:
-                        return state.bcv;
-                }
-            }
-
-            function convertAmount(amount, fromCode, toCode) {
-                if (!amount || isNaN(amount)) return 0;
-                if (fromCode === toCode) return amount;
-                const vesValue = amount * getVesPerUnit(fromCode);
-                const targetUnitInVes = getVesPerUnit(toCode);
-                return targetUnitInVes > 0 ? (vesValue / targetUnitInVes) : 0;
-            }
-
-            function loadSavedState() {
-                try {
-                    const raw = localStorage.getItem(STORAGE_RATES_KEY);
-                    if (raw) {
-                        const saved = JSON.parse(raw);
-                        if (saved.bcv > 0) state.bcv = saved.bcv;
-                        if (saved.usdt > 0) state.usdt = saved.usdt;
-                        if (saved.usdToBrl > 0) state.usdToBrl = saved.usdToBrl;
-                        if (saved.usdToCop > 0) state.usdToCop = saved.usdToCop;
-                        if (saved.manualUsdToVes > 0) state.manualUsdToVes = saved.manualUsdToVes;
-                        if (saved.crossBase) state.crossBase = saved.crossBase;
-                        if (saved.lastUpdate) state.lastUpdate = saved.lastUpdate;
-                    }
-                } catch (e) {}
-                els.manualRateInput.value = state.manualUsdToVes;
-            }
-
-            function saveRatesState() {
-                try {
-                    localStorage.setItem(STORAGE_RATES_KEY, JSON.stringify({
-                        bcv: state.bcv,
-                        usdt: state.usdt,
-                        usdToBrl: state.usdToBrl,
-                        usdToCop: state.usdToCop,
-                        manualUsdToVes: state.manualUsdToVes,
-                        crossBase: state.crossBase,
-                        lastUpdate: state.lastUpdate
-                    }));
-                } catch (e) {}
-            }
-
-            // Consulta de tasas en vivo desde las APIs oficiales con respaldo offline
-            async function fetchLiveRates() {
-                els.refreshIcon.classList.add('animate-spin');
-                els.statusDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0';
-                els.statusText.textContent = 'Actualizando tasas...';
-
-                let okBcv = false;
-                let okUsdt = false;
-                let okFx = false;
-
-                try {
-                    const resBcv = await fetch('https://ve.dolarapi.com/v1/dolares/oficial', { cache: 'no-store' });
-                    if (resBcv.ok) {
-                        const dataBcv = await resBcv.json();
-                        if (dataBcv && dataBcv.promedio > 0) {
-                            state.bcv = Number(dataBcv.promedio);
-                            okBcv = true;
-                        }
-                    }
-                } catch (e) {}
-
-                try {
-                    const resUsdt = await fetch('https://ve.dolarapi.com/v1/dolares/paralelo', { cache: 'no-store' });
-                    if (resUsdt.ok) {
-                        const dataUsdt = await resUsdt.json();
-                        if (dataUsdt && dataUsdt.promedio > 0) {
-                            state.usdt = Number(dataUsdt.promedio);
-                            okUsdt = true;
-                        }
-                    }
-                } catch (e) {}
-
-                try {
-                    const resFx = await fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' });
-                    if (resFx.ok) {
-                        const dataFx = await resFx.json();
-                        if (dataFx && dataFx.rates) {
-                            if (dataFx.rates.BRL > 0) {
-                                state.usdToBrl = Number(dataFx.rates.BRL);
-                                okFx = true;
-                            }
-                            if (dataFx.rates.COP > 0) {
-                                state.usdToCop = Number(dataFx.rates.COP);
-                                okFx = true;
-                            }
-                        }
-                    }
-                } catch (e) {}
-
-                const timeStr = new Date().toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
-                if (okBcv || okUsdt || okFx) {
-                    state.lastUpdate = timeStr;
-                    saveRatesState();
-                    els.statusDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0';
-                    els.statusText.textContent = `En vivo • ${timeStr}`;
-                } else {
-                    els.statusDot.className = 'w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0';
-                    els.statusText.textContent = state.lastUpdate ? `Offline • ${state.lastUpdate}` : 'Modo Offline';
-                }
-
-                els.refreshIcon.classList.remove('animate-spin');
-                renderAll();
-            }
-
-            function renderQuickButtons() {
-                const isCop = state.fromCurrency === 'COP';
-                const amounts = isCop
-                    ? [
-                        { val: 5000, label: '5k' },
-                        { val: 10000, label: '10k' },
-                        { val: 20000, label: '20k' },
-                        { val: 50000, label: '50k' },
-                        { val: 100000, label: '100k' },
-                        { val: 200000, label: '200k' }
-                      ]
-                    : [
-                        { val: 1, label: '1' },
-                        { val: 5, label: '5' },
-                        { val: 10, label: '10' },
-                        { val: 20, label: '20' },
-                        { val: 50, label: '50' },
-                        { val: 100, label: '100' }
-                      ];
-
-                els.quickAmountsRow.innerHTML = amounts.map(item => `
-                    <button type="button" data-quick-val="${item.val}"
-                        class="quick-btn py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700/60 text-[11px] font-bold text-slate-200 active:scale-95 transition">
-                        ${item.label}
-                    </button>
-                `).join('');
-
-                els.quickAmountsRow.querySelectorAll('.quick-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const val = btn.getAttribute('data-quick-val');
-                        state.lastEdited = 'from';
-                        els.inputFrom.value = val;
-                        recalculateConversion();
-                        scheduleHistorySave();
-                    });
-                });
-            }
-
-            function renderAll() {
-                const vesPerBrl = getVesPerUnit('BRL');
-                const vesPerCop = getVesPerUnit('COP');
-                const vesPer1000Cop = vesPerCop * 1000;
-
-                els.cardBcvVal.textContent = `Bs ${formatNum(state.bcv, 2)}`;
-                els.cardUsdtVal.textContent = `Bs ${formatNum(state.usdt, 2)}`;
-                els.cardUsdBrlVal.textContent = `1$=${formatNum(state.usdToBrl, 2)} R$`;
-                els.cardBrlVesVal.textContent = `Bs ${formatNum(vesPerBrl, 2)} / R$`;
-                els.cardUsdCopVal.textContent = `1$=${formatNum(state.usdToCop, 2)}`;
-                els.cardCopVesVal.textContent = `Bs ${formatNum(vesPer1000Cop, 2)} / 1k`;
-                els.cardCopUnitSub.textContent = `1 COP = Bs ${formatNum(vesPerCop, 4)}`;
-
-                if (state.crossBase === 'bcv') {
-                    els.btnRefBcv.className = 'px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-sky-500 text-slate-950 transition';
-                    els.btnRefUsdt.className = 'px-2 py-0.5 rounded-lg text-[10px] font-extrabold text-slate-400 hover:text-white transition';
-                } else {
-                    els.btnRefBcv.className = 'px-2 py-0.5 rounded-lg text-[10px] font-extrabold text-slate-400 hover:text-white transition';
-                    els.btnRefUsdt.className = 'px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-amber-400 text-slate-950 transition';
-                }
-
-                document.querySelectorAll('.rate-card').forEach(card => {
-                    const c = card.getAttribute('data-card-currency');
-                    if (c === state.fromCurrency) {
-                        card.classList.remove('border', 'border-mdOutline');
-                        card.classList.add('border-2', 'border-sky-400');
-                    } else {
-                        card.classList.remove('border-2', 'border-sky-400');
-                        card.classList.add('border', 'border-mdOutline');
-                    }
-                });
-
-                els.selectFrom.value = state.fromCurrency;
-                els.selectTo.value = state.toCurrency;
-                els.symbolFrom.textContent = CURRENCY_META[state.fromCurrency].symbol;
-                els.symbolTo.textContent = CURRENCY_META[state.toCurrency].symbol;
-
-                const unitRate = convertAmount(1, state.fromCurrency, state.toCurrency);
-                const fromShort = CURRENCY_META[state.fromCurrency].short;
-                const toShort = CURRENCY_META[state.toCurrency].short;
-                if (state.fromCurrency === 'COP' && state.toCurrency === 'VES') {
-                    els.pairRateText.innerHTML = `1.000 COP = <strong class="text-slate-200">Bs ${formatNum(unitRate * 1000, 2)}</strong>`;
-                } else {
-                    const dec = unitRate < 1 ? 4 : 2;
-                    els.pairRateText.innerHTML = `1 ${fromShort} = <strong class="text-slate-200">${formatNum(unitRate, dec)} ${toShort}</strong>`;
-                }
-
-                renderQuickButtons();
-                recalculateConversion();
-            }
-
-            function recalculateConversion() {
-                let fromAmount = 0;
-                let toAmount = 0;
-
-                if (state.lastEdited === 'from') {
-                    fromAmount = parseFloat(els.inputFrom.value);
-                    if (!isNaN(fromAmount)) {
-                        toAmount = convertAmount(fromAmount, state.fromCurrency, state.toCurrency);
-                        els.inputTo.value = toAmount ? Number(toAmount.toFixed(4)).toString() : '';
-                    } else {
-                        els.inputTo.value = '';
-                        fromAmount = 0;
-                        toAmount = 0;
-                    }
-                } else {
-                    toAmount = parseFloat(els.inputTo.value);
-                    if (!isNaN(toAmount)) {
-                        fromAmount = convertAmount(toAmount, state.toCurrency, state.fromCurrency);
-                        els.inputFrom.value = fromAmount ? Number(fromAmount.toFixed(4)).toString() : '';
-                    } else {
-                        els.inputFrom.value = '';
-                        fromAmount = 0;
-                        toAmount = 0;
-                    }
-                }
-
-                const eqBcv = convertAmount(fromAmount, state.fromCurrency, 'USD_BCV');
-                const eqUsdt = convertAmount(fromAmount, state.fromCurrency, 'USDT');
-                const eqVes = convertAmount(fromAmount, state.fromCurrency, 'VES');
-                const eqBrl = convertAmount(fromAmount, state.fromCurrency, 'BRL');
-                const eqCop = convertAmount(fromAmount, state.fromCurrency, 'COP');
-
-                els.eqUsdBcv.textContent = `$ ${formatNum(eqBcv, 2)}`;
-                els.eqUsdt.textContent = `${formatNum(eqUsdt, 2)} ₮`;
-                els.eqVes.textContent = `Bs ${formatNum(eqVes, 2)}`;
-                els.eqBrl.textContent = `R$ ${formatNum(eqBrl, 2)}`;
-                els.eqCop.textContent = `$ ${formatNum(eqCop, 2)} COP`;
-            }
-
-            let historyTimer = null;
-            function scheduleHistorySave() {
-                clearTimeout(historyTimer);
-                historyTimer = setTimeout(() => {
-                    const fromVal = parseFloat(els.inputFrom.value);
-                    const toVal = parseFloat(els.inputTo.value);
-                    if (!fromVal || !toVal || fromVal <= 0 || toVal <= 0) return;
-
-                    const unitRate = convertAmount(1, state.fromCurrency, state.toCurrency);
-                    const entry = {
-                        id: Date.now(),
-                        date: new Date().toLocaleDateString('es-VE', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-                        time: new Date().toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }),
-                        fromCurrency: state.fromCurrency,
-                        toCurrency: state.toCurrency,
-                        fromAmount: fromVal,
-                        toAmount: toVal,
-                        rateApplied: unitRate
-                    };
-
-                    let list = getHistory();
-                    if (list.length > 0 &&
-                        list[0].fromCurrency === entry.fromCurrency &&
-                        list[0].toCurrency === entry.toCurrency &&
-                        Math.abs(list[0].fromAmount - entry.fromAmount) < 0.0001) {
-                        return;
-                    }
-
-                    list.unshift(entry);
-                    if (list.length > 60) list = list.slice(0, 60);
-                    localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(list));
-                    updateHistoryBadge();
-                }, 1200);
-            }
-
-            function getHistory() {
-                try {
-                    return JSON.parse(localStorage.getItem(STORAGE_HISTORY_KEY)) || [];
-                } catch (e) {
-                    return [];
-                }
-            }
-
-            function updateHistoryBadge() {
-                const len = getHistory().length;
-                if (len > 0) {
-                    els.historyBadge.textContent = len > 99 ? '99+' : len;
-                    els.historyBadge.classList.remove('hidden');
-                } else {
-                    els.historyBadge.classList.add('hidden');
-                }
-            }
-
-            function renderHistoryModal() {
-                const list = getHistory();
-                if (list.length === 0) {
-                    els.historyList.innerHTML = `
-                        <div class="text-center py-8 text-xs text-slate-500">
-                            No hay cálculos guardados aún. Cada conversión se registrará automáticamente aquí.
-                        </div>`;
-                    return;
-                }
-
-                els.historyList.innerHTML = list.map((item, idx) => {
-                    const fMeta = CURRENCY_META[item.fromCurrency] || { short: item.fromCurrency, symbol: '' };
-                    const tMeta = CURRENCY_META[item.toCurrency] || { short: item.toCurrency, symbol: '' };
-                    const rateDec = item.rateApplied < 1 ? 4 : 2;
-                    return `
-                        <button type="button" data-history-index="${idx}"
-                            class="history-item-btn w-full text-left bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 hover:border-sky-500/50 rounded-2xl p-3 transition flex items-center justify-between gap-2">
-                            <div>
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <span class="text-xs font-extrabold text-white">${fMeta.symbol} ${formatNum(item.fromAmount, 2)} ${fMeta.short}</span>
-                                    <span class="text-slate-500 text-xs">→</span>
-                                    <span class="text-xs font-extrabold text-emerald-400">${tMeta.symbol} ${formatNum(item.toAmount, 2)} ${tMeta.short}</span>
-                                </div>
-                                <div class="text-[10px] text-slate-400 mt-1">
-                                    Tasa: 1 ${fMeta.short} = ${formatNum(item.rateApplied, rateDec)} ${tMeta.short}
-                                </div>
-                            </div>
-                            <div class="text-right shrink-0">
-                                <span class="text-[10px] text-slate-400 block">${item.date}</span>
-                                <span class="text-[10px] font-semibold text-slate-300">${item.time}</span>
-                            </div>
-                        </button>
-                    `;
-                }).join('');
-
-                els.historyList.querySelectorAll('.history-item-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const idx = parseInt(btn.getAttribute('data-history-index'), 10);
-                        const selected = list[idx];
-                        if (selected) {
-                            state.fromCurrency = selected.fromCurrency;
-                            state.toCurrency = selected.toCurrency;
-                            state.lastEdited = 'from';
-                            els.inputFrom.value = selected.fromAmount;
-                            renderAll();
-                            els.historyModal.classList.add('hidden');
-                            showToast('Cálculo cargado en la calculadora');
-                        }
-                    });
-                });
-            }
-
-            // Comprobante formateado para WhatsApp con encabezado oficial "Divisas Venezuela"
-            function copyWhatsappBreakdown() {
-                const fromVal = parseFloat(els.inputFrom.value) || 0;
-                const toVal = parseFloat(els.inputTo.value) || 0;
-                const fMeta = CURRENCY_META[state.fromCurrency];
-                const tMeta = CURRENCY_META[state.toCurrency];
-
-                const eqBcv = convertAmount(fromVal, state.fromCurrency, 'USD_BCV');
-                const eqUsdt = convertAmount(fromVal, state.fromCurrency, 'USDT');
-                const eqVes = convertAmount(fromVal, state.fromCurrency, 'VES');
-                const eqBrl = convertAmount(fromVal, state.fromCurrency, 'BRL');
-                const eqCop = convertAmount(fromVal, state.fromCurrency, 'COP');
-
-                const text = [
-                    `💱 *Divisas Venezuela*`,
-                    `• *Origen:* ${fMeta.symbol} ${formatNum(fromVal, 2)} (${fMeta.short})`,
-                    `• *Resultado:* ${tMeta.symbol} ${formatNum(toVal, 2)} (${tMeta.short})`,
-                    ``,
-                    `📊 *Equivalencias simultáneas:*`,
-                    `🇺🇸 USD BCV: $ ${formatNum(eqBcv, 2)}`,
-                    `🪙 USDT Binance: ${formatNum(eqUsdt, 2)} USDT`,
-                    `🇻🇪 Bolívares: Bs ${formatNum(eqVes, 2)}`,
-                    `🇧🇷 Real Brasileño: R$ ${formatNum(eqBrl, 2)}`,
-                    `🇨🇴 Peso Colombiano: $ ${formatNum(eqCop, 2)} COP`,
-                    ``,
-                    `📌 *Tasas de referencia:*`,
-                    `• BCV: Bs ${formatNum(state.bcv, 2)} | USDT: Bs ${formatNum(state.usdt, 2)}`,
-                    `• 1 USD = ${formatNum(state.usdToBrl, 2)} R$ | ${formatNum(state.usdToCop, 2)} COP`
-                ].join('\n');
-
-                copyToClipboard(text, 'Comprobante Divisas Venezuela copiado');
-            }
-
-            els.inputFrom.addEventListener('input', () => {
-                state.lastEdited = 'from';
-                recalculateConversion();
-                scheduleHistorySave();
-            });
-
-            els.inputTo.addEventListener('input', () => {
-                state.lastEdited = 'to';
-                recalculateConversion();
-                scheduleHistorySave();
-            });
-
-            els.selectFrom.addEventListener('change', () => {
-                state.fromCurrency = els.selectFrom.value;
-                renderAll();
-                scheduleHistorySave();
-            });
-
-            els.selectTo.addEventListener('change', () => {
-                state.toCurrency = els.selectTo.value;
-                renderAll();
-                scheduleHistorySave();
-            });
-
-            els.btnSwapCurrencies.addEventListener('click', () => {
-                const temp = state.fromCurrency;
-                state.fromCurrency = state.toCurrency;
-                state.toCurrency = temp;
-                state.lastEdited = 'from';
-                renderAll();
-                scheduleHistorySave();
-            });
-
-            document.querySelectorAll('.rate-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const curr = card.getAttribute('data-card-currency');
-                    if (curr) {
-                        if (state.toCurrency === curr) {
-                            state.toCurrency = state.fromCurrency;
-                        }
-                        state.fromCurrency = curr;
-                        state.lastEdited = 'from';
-                        renderAll();
-                        scheduleHistorySave();
-                    }
-                });
-            });
-
-            els.btnRefBcv.addEventListener('click', () => {
-                state.crossBase = 'bcv';
-                saveRatesState();
-                renderAll();
-                showToast('BRL y COP calculados con Dólar BCV');
-            });
-
-            els.btnRefUsdt.addEventListener('click', () => {
-                state.crossBase = 'usdt';
-                saveRatesState();
-                renderAll();
-                showToast('BRL y COP calculados con USDT Binance');
-            });
-
-            // Modal Tasa Manual
-            els.btnOpenManualModal.addEventListener('click', () => {
-                els.manualRateInput.value = state.manualUsdToVes;
-                els.manualModal.classList.remove('hidden');
-            });
-            els.btnCloseManualModal.addEventListener('click', () => els.manualModal.classList.add('hidden'));
-
-            els.btnSaveManualOnly.addEventListener('click', () => {
-                const val = parseFloat(els.manualRateInput.value);
-                if (val > 0) {
-                    state.manualUsdToVes = val;
-                    saveRatesState();
-                    renderAll();
-                    els.manualModal.classList.add('hidden');
-                    showToast(`Tasa manual guardada: Bs ${formatNum(val, 2)}`);
-                } else {
-                    showToast('Ingresa un monto mayor a 0');
-                }
-            });
-
-            els.btnUseManualCurrency.addEventListener('click', () => {
-                const val = parseFloat(els.manualRateInput.value);
-                if (val > 0) {
-                    state.manualUsdToVes = val;
-                    saveRatesState();
-                }
-                state.fromCurrency = 'USD_MANUAL';
-                state.toCurrency = 'VES';
-                state.lastEdited = 'from';
-                renderAll();
-                els.manualModal.classList.add('hidden');
-                showToast('Tasa manual aplicada');
-            });
-
-            els.btnCopyFrom.addEventListener('click', () => {
-                if (els.inputFrom.value) copyToClipboard(els.inputFrom.value, 'Monto origen copiado');
-            });
-            els.btnCopyTo.addEventListener('click', () => {
-                if (els.inputTo.value) copyToClipboard(els.inputTo.value, 'Monto destino copiado');
-            });
-            els.btnCopyWhatsapp.addEventListener('click', copyWhatsappBreakdown);
-
-            els.btnClearInputs.addEventListener('click', () => {
-                els.inputFrom.value = '';
-                els.inputTo.value = '';
-                recalculateConversion();
-            });
-
-            els.btnRefresh.addEventListener('click', fetchLiveRates);
-
-            els.btnOpenHistory.addEventListener('click', () => {
-                renderHistoryModal();
-                els.historyModal.classList.remove('hidden');
-            });
-            els.btnCloseHistory.addEventListener('click', () => els.historyModal.classList.add('hidden'));
-            els.btnClearHistory.addEventListener('click', () => {
-                localStorage.removeItem(STORAGE_HISTORY_KEY);
-                renderHistoryModal();
-                updateHistoryBadge();
-                showToast('Historial borrado');
-            });
-
-            els.btnOpenApkGuide.addEventListener('click', () => els.apkModal.classList.remove('hidden'));
-            els.btnCloseApkGuide.addEventListener('click', () => els.apkModal.classList.add('hidden'));
-            els.btnConfirmApkGuide.addEventListener('click', () => els.apkModal.classList.add('hidden'));
-
-            loadSavedState();
-            updateHistoryBadge();
-            renderAll();
-            fetchLiveRates();
-        })();
-    </script>
+  </div>
+
+  <script>
+    /* Created by César Ramírez León */
+    const STORAGE_KEYS = {
+      LAST_RATES: 'divisas_ve_ultima_tasa_v1',
+      HISTORY: 'divisas_ve_historial_v1',
+      BASE_MODE: 'divisas_ve_base_mode_v1'
+    };
+
+    const FALLBACK_RATES = {
+      bcv: 911.62,
+      usdt: 1048.60,
+      brlPerUsd: 5.65,
+      copPerUsd: 3286.10
+    };
+
+    const SYMBOLS = {
+      USD: '$',
+      USDT: '₮',
+      VES: 'Bs',
+      BRL: 'R$',
+      COP: 'COL$'
+    };
+
+    let state = {
+      bcv: FALLBACK_RATES.bcv,
+      usdt: FALLBACK_RATES.usdt,
+      brlPerUsd: FALLBACK_RATES.brlPerUsd,
+      copPerUsd: FALLBACK_RATES.copPerUsd,
+      baseMode: localStorage.getItem(STORAGE_KEYS.BASE_MODE) || 'BCV',
+      from: 'USD',
+      to: 'VES',
+      isManual: false
+    };
+
+    function formatNum(value, decimals = 2) {
+      if (!Number.isFinite(value)) return '0,00';
+      return value.toLocaleString('es-VE', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+    }
+
+    function saveLastRatesToStorage(ratesObj) {
+      try {
+        localStorage.setItem(STORAGE_KEYS.LAST_RATES, JSON.stringify({
+          bcv: ratesObj.bcv,
+          usdt: ratesObj.usdt,
+          brlPerUsd: ratesObj.brlPerUsd,
+          copPerUsd: ratesObj.copPerUsd,
+          savedAt: new Date().toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' })
+        }));
+      } catch (_) {}
+    }
+
+    function loadLastRatesFromStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.LAST_RATES);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (parsed && Number(parsed.bcv) > 0 && Number(parsed.usdt) > 0) {
+          return parsed;
+        }
+      } catch (_) {}
+      return null;
+    }
+
+    function applyRates(ratesObj, statusMessage, isOnline) {
+      state.bcv = Number(ratesObj.bcv) > 0 ? Number(ratesObj.bcv) : FALLBACK_RATES.bcv;
+      state.usdt = Number(ratesObj.usdt) > 0 ? Number(ratesObj.usdt) : FALLBACK_RATES.usdt;
+      state.brlPerUsd = Number(ratesObj.brlPerUsd) > 0 ? Number(ratesObj.brlPerUsd) : FALLBACK_RATES.brlPerUsd;
+      state.copPerUsd = Number(ratesObj.copPerUsd) > 0 ? Number(ratesObj.copPerUsd) : FALLBACK_RATES.copPerUsd;
+
+      const dot = document.getElementById('statusDot');
+      const statusEl = document.getElementById('statusBadge');
+      const textEl = document.getElementById('statusText');
+
+      textEl.textContent = statusMessage;
+      if (isOnline) {
+        dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0';
+        statusEl.className = 'flex items-center gap-1.5 text-[11px] text-emerald-400 leading-tight truncate';
+      } else if (state.isManual) {
+        dot.className = 'w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0';
+        statusEl.className = 'flex items-center gap-1.5 text-[11px] text-purple-300 leading-tight truncate';
+      } else {
+        dot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0';
+        statusEl.className = 'flex items-center gap-1.5 text-[11px] text-amber-300 leading-tight truncate';
+      }
+
+      document.getElementById('manualBcvInput').value = state.bcv.toFixed(2);
+      document.getElementById('manualUsdtInput').value = state.usdt.toFixed(2);
+
+      recalculateAll();
+    }
+
+    function getReferenceUsdRate() {
+      return state.baseMode === 'USDT' ? state.usdt : state.bcv;
+    }
+
+    function getBrlRateInVes() {
+      const ref = getReferenceUsdRate();
+      return state.brlPerUsd > 0 ? ref / state.brlPerUsd : 0;
+    }
+
+    function getCopRateInVes() {
+      const ref = getReferenceUsdRate();
+      return state.copPerUsd > 0 ? ref / state.copPerUsd : 0;
+    }
+
+    function toVes(amount, currency) {
+      if (!Number.isFinite(amount)) return 0;
+      switch (currency) {
+        case 'VES': return amount;
+        case 'USD': return amount * state.bcv;
+        case 'USDT': return amount * state.usdt;
+        case 'BRL': return amount * getBrlRateInVes();
+        case 'COP': return amount * getCopRateInVes();
+        default: return amount;
+      }
+    }
+
+    function fromVes(vesAmount, currency) {
+      if (!Number.isFinite(vesAmount)) return 0;
+      switch (currency) {
+        case 'VES': return vesAmount;
+        case 'USD': return state.bcv > 0 ? vesAmount / state.bcv : 0;
+        case 'USDT': return state.usdt > 0 ? vesAmount / state.usdt : 0;
+        case 'BRL': {
+          const brlVes = getBrlRateInVes();
+          return brlVes > 0 ? vesAmount / brlVes : 0;
+        }
+        case 'COP': {
+          const copVes = getCopRateInVes();
+          return copVes > 0 ? vesAmount / copVes : 0;
+        }
+        default: return vesAmount;
+      }
+    }
+
+    function recalculateAll() {
+      const brlVes = getBrlRateInVes();
+      const copVes = getCopRateInVes();
+      const cop1kVes = copVes * 1000;
+
+      document.getElementById('rateBcvDisplay').textContent = `Bs ${formatNum(state.bcv, 2)}`;
+      document.getElementById('rateUsdtDisplay').textContent = `Bs ${formatNum(state.usdt, 2)}`;
+      document.getElementById('rateBrlDisplay').textContent = `Bs ${formatNum(brlVes, 2)} / R$`;
+      document.getElementById('brlCrossDisplay').textContent = `1${state.baseMode === 'USDT' ? '₮' : '$'}=${formatNum(state.brlPerUsd, 2)} R$`;
+      document.getElementById('rateCopDisplay').textContent = `Bs ${formatNum(cop1kVes, 2)} / 1k`;
+      document.getElementById('copCrossDisplay').textContent = `1${state.baseMode === 'USDT' ? '₮' : '$'}=${formatNum(state.copPerUsd, 2)}`;
+      document.getElementById('copUnitDisplay').textContent = `1 COP = Bs ${formatNum(copVes, 4)}`;
+
+      const btnBcv = document.getElementById('btnBaseBcv');
+      const btnUsdt = document.getElementById('btnBaseUsdt');
+      if (state.baseMode === 'BCV') {
+        btnBcv.className = 'px-2 py-0.5 rounded-md font-bold bg-cyan-500 text-slate-950 transition';
+        btnUsdt.className = 'px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-300 border border-slate-700 transition';
+      } else {
+        btnUsdt.className = 'px-2 py-0.5 rounded-md font-bold bg-emerald-400 text-slate-950 transition';
+        btnBcv.className = 'px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-300 border border-slate-700 transition';
+      }
+
+      const rawFrom = parseFloat(document.getElementById('fromAmount').value);
+      const amount = Number.isFinite(rawFrom) ? rawFrom : 0;
+      const vesTotal = toVes(amount, state.from);
+      const convertedTo = fromVes(vesTotal, state.to);
+
+      document.getElementById('fromSymbol').textContent = SYMBOLS[state.from] || '';
+      document.getElementById('toSymbol').textContent = SYMBOLS[state.to] || '';
+      document.getElementById('toAmount').textContent = formatNum(convertedTo, state.to === 'COP' ? 0 : 2);
+
+      const oneUnitInVes = toVes(1, state.from);
+      document.getElementById('rateSummaryText').textContent =
+        `1 ${state.from} = ${formatNum(oneUnitInVes, 2)} VES`;
+
+      document.getElementById('eqUsd').textContent = `$ ${formatNum(fromVes(vesTotal, 'USD'), 2)}`;
+      document.getElementById('eqUsdt').textContent = `${formatNum(fromVes(vesTotal, 'USDT'), 2)} ₮`;
+      document.getElementById('eqVes').textContent = `Bs ${formatNum(vesTotal, 2)}`;
+      document.getElementById('eqBrl').textContent = `R$ ${formatNum(fromVes(vesTotal, 'BRL'), 2)}`;
+      document.getElementById('eqCop').textContent = `$ ${formatNum(fromVes(vesTotal, 'COP'), 0)} COP`;
+    }
+
+    async function fetchLiveRates() {
+      if (state.isManual) return;
+
+      const icon = document.getElementById('refreshIcon');
+      icon.classList.add('animate-spin');
+
+      try {
+        const [bcvRes, usdtRes, fxRes] = await Promise.all([
+          fetch('https://ve.dolarapi.com/v1/dolares/oficial', { cache: 'no-store' }),
+          fetch('https://ve.dolarapi.com/v1/dolares/paralelo', { cache: 'no-store' }),
+          fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' })
+        ]);
+
+        if (!bcvRes.ok) throw new Error('Error consultando BCV');
+
+        const bcvJson = await bcvRes.json();
+        const usdtJson = usdtRes.ok ? await usdtRes.json() : null;
+        const fxJson = fxRes.ok ? await fxRes.json() : null;
+
+        const freshRates = {
+          bcv: Number(bcvJson.promedio || bcvJson.venta || FALLBACK_RATES.bcv),
+          usdt: Number(usdtJson?.promedio || usdtJson?.venta || FALLBACK_RATES.usdt),
+          brlPerUsd: Number(fxJson?.rates?.BRL || FALLBACK_RATES.brlPerUsd),
+          copPerUsd: Number(fxJson?.rates?.COP || FALLBACK_RATES.copPerUsd)
+        };
+
+        saveLastRatesToStorage(freshRates);
+        const nowStr = new Date().toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
+        applyRates(freshRates, `En vivo • ${nowStr}`, true);
+      } catch (_) {
+        const saved = loadLastRatesFromStorage();
+        if (saved) {
+          applyRates(saved, `Sin red • Última tasa (${saved.savedAt || 'guardada'})`, false);
+        } else {
+          applyRates(FALLBACK_RATES, 'Sin red • Tasa inicial', false);
+        }
+      } finally {
+        icon.classList.remove('animate-spin');
+      }
+    }
+
+    function saveHistoryItem() {
+      const amount = parseFloat(document.getElementById('fromAmount').value) || 0;
+      if (amount <= 0) return;
+
+      const vesTotal = toVes(amount, state.from);
+      const item = {
+        id: Date.now(),
+        from: state.from,
+        to: state.to,
+        amount,
+        result: fromVes(vesTotal, state.to),
+        bcv: state.bcv,
+        usdt: state.usdt,
+        date: new Date().toLocaleString('es-VE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+      };
+
+      const list = getHistory();
+      list.unshift(item);
+      localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(list.slice(0, 30)));
+      renderHistory();
+    }
+
+    function getHistory() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY) || '[]');
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyList');
+      const list = getHistory();
+      if (!list.length) {
+        container.innerHTML = '<div class="text-slate-400 text-center py-6">No hay conversiones guardadas.</div>';
+        return;
+      }
+      container.innerHTML = list.map(entry => `
+        <div class="rounded-xl bg-slate-900 border border-slate-800 p-2.5 flex items-center justify-between gap-2">
+          <div>
+            <div class="font-bold text-white">${formatNum(entry.amount, 2)} ${entry.from} → ${formatNum(entry.result, 2)} ${entry.to}</div>
+            <div class="text-[11px] text-slate-400">BCV: ${formatNum(entry.bcv, 2)} | USDT: ${formatNum(entry.usdt, 2)} • ${entry.date}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('fromCurrency').value = state.from;
+      document.getElementById('toCurrency').value = state.to;
+
+      document.getElementById('fromAmount').addEventListener('input', recalculateAll);
+      document.getElementById('fromCurrency').addEventListener('change', (e) => {
+        state.from = e.target.value;
+        recalculateAll();
+      });
+      document.getElementById('toCurrency').addEventListener('change', (e) => {
+        state.to = e.target.value;
+        recalculateAll();
+      });
+
+      document.getElementById('btnSwap').addEventListener('click', () => {
+        const prevFrom = state.from;
+        state.from = state.to;
+        state.to = prevFrom;
+        document.getElementById('fromCurrency').value = state.from;
+        document.getElementById('toCurrency').value = state.to;
+        recalculateAll();
+      });
+
+      document.getElementById('btnClear').addEventListener('click', () => {
+        document.getElementById('fromAmount').value = '';
+        recalculateAll();
+      });
+
+      document.querySelectorAll('.quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById('fromAmount').value = btn.dataset.quick;
+          recalculateAll();
+        });
+      });
+
+      document.getElementById('btnBaseBcv').addEventListener('click', () => {
+        state.baseMode = 'BCV';
+        localStorage.setItem(STORAGE_KEYS.BASE_MODE, 'BCV');
+        recalculateAll();
+      });
+
+      document.getElementById('btnBaseUsdt').addEventListener('click', () => {
+        state.baseMode = 'USDT';
+        localStorage.setItem(STORAGE_KEYS.BASE_MODE, 'USDT');
+        recalculateAll();
+      });
+
+      document.getElementById('btnManualToggle').addEventListener('click', () => {
+        document.getElementById('manualPanel').classList.toggle('hidden');
+      });
+
+      document.getElementById('btnManualApply').addEventListener('click', () => {
+        const mBcv = parseFloat(document.getElementById('manualBcvInput').value);
+        const mUsdt = parseFloat(document.getElementById('manualUsdtInput').value);
+        state.isManual = true;
+        applyRates({
+          bcv: Number.isFinite(mBcv) && mBcv > 0 ? mBcv : state.bcv,
+          usdt: Number.isFinite(mUsdt) && mUsdt > 0 ? mUsdt : state.usdt,
+          brlPerUsd: state.brlPerUsd,
+          copPerUsd: state.copPerUsd
+        }, 'Modo Tasa Manual', false);
+        document.getElementById('manualPanel').classList.add('hidden');
+      });
+
+      document.getElementById('btnRefresh').addEventListener('click', () => {
+        state.isManual = false;
+        fetchLiveRates();
+      });
+
+      document.getElementById('btnCopyFrom').addEventListener('click', () => {
+        const val = document.getElementById('fromAmount').value || '0';
+        navigator.clipboard?.writeText(`${val} ${state.from}`);
+      });
+
+      document.getElementById('btnCopyTo').addEventListener('click', () => {
+        const val = document.getElementById('toAmount').textContent || '0';
+        navigator.clipboard?.writeText(`${val} ${state.to}`);
+      });
+
+      document.getElementById('btnSaveHistory').addEventListener('click', saveHistoryItem);
+
+      document.getElementById('btnShareWhatsapp').addEventListener('click', () => {
+        const amount = parseFloat(document.getElementById('fromAmount').value) || 0;
+        const vesTotal = toVes(amount, state.from);
+        const msg = [
+          `*Divisas Venezuela*`,
+          `Monto: ${formatNum(amount, 2)} ${state.from}`,
+          `• USD BCV: $ ${formatNum(fromVes(vesTotal, 'USD'), 2)} (Tasa: ${formatNum(state.bcv, 2)})`,
+          `• USDT: ${formatNum(fromVes(vesTotal, 'USDT'), 2)} ₮ (Tasa: ${formatNum(state.usdt, 2)})`,
+          `• Bolívares: Bs ${formatNum(vesTotal, 2)}`,
+          `• BRL: R$ ${formatNum(fromVes(vesTotal, 'BRL'), 2)}`,
+          `• COP: $ ${formatNum(fromVes(vesTotal, 'COP'), 0)} COP`,
+          `Created by César Ramírez León`
+        ].join('\n');
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+      });
+
+      document.getElementById('btnHistory').addEventListener('click', () => {
+        renderHistory();
+        document.getElementById('historyModal').classList.remove('hidden');
+      });
+      document.getElementById('btnCloseHistory').addEventListener('click', () => {
+        document.getElementById('historyModal').classList.add('hidden');
+      });
+      document.getElementById('btnClearHistory').addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_KEYS.HISTORY);
+        renderHistory();
+      });
+
+      const cached = loadLastRatesFromStorage();
+      if (cached) {
+        applyRates(cached, `Última tasa (${cached.savedAt || 'guardada'})`, false);
+      } else {
+        applyRates(FALLBACK_RATES, 'Tasa inicial', false);
+      }
+
+      fetchLiveRates();
+    });
+  </script>
 </body>
 </html>
